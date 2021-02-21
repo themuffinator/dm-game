@@ -1,5 +1,5 @@
 # DarkMatter Game
-
+idTech3 game logic modules based on baseq3a.
 
 ## Introduction
 QUAKE communities have always been fractured as players gravitate towards a certain title. From Q1 to Q3, there are at least 1,500 quality community-made levels - many of which have either not received the acclaim they deserved or are slowly disappearing from online presence.
@@ -11,3 +11,6 @@ DarkMatter is a project that will ultimately provide a unified platform for enjo
 * Multi-team support
 * Entities and items: redo itemlist, adaptive ent handling per game, initial entity support across Q1, Q2, QL
 * Weapon slots system
+
+## Links
+https://github.com/ec-/baseq3a
