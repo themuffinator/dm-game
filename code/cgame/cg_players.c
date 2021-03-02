@@ -308,7 +308,7 @@ static qboolean	CG_FindClientModelFile( char *filename, int length, clientInfo_t
 	char *team, *charactersFolder;
 	int i;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype >= GT_TDM ) {
 		switch ( ci->team ) {
 			case TEAM_BLUE: {
 				team = "blue";
@@ -343,7 +343,7 @@ static qboolean	CG_FindClientModelFile( char *filename, int length, clientInfo_t
 			if ( CG_FileExists( filename ) ) {
 				return qtrue;
 			}
-			if ( cgs.gametype >= GT_TEAM ) {
+			if ( cgs.gametype >= GT_TDM ) {
 				if ( i == 0 && teamName && *teamName ) {
 					//								"models/players/characters/james/stroggs/lower_red.skin"
 					Com_sprintf( filename, length, "models/players/%s%s/%s%s_%s.%s", charactersFolder, modelName, teamName, base, team, ext );
@@ -390,7 +390,7 @@ static qboolean	CG_FindClientHeadFile( char *filename, int length, clientInfo_t 
 	char *team, *headsFolder;
 	int i;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype >= GT_TDM ) {
 		switch ( ci->team ) {
 			case TEAM_RED: {
 				team = "red";
@@ -433,7 +433,7 @@ static qboolean	CG_FindClientHeadFile( char *filename, int length, clientInfo_t 
 			if ( CG_FileExists( filename ) ) {
 				return qtrue;
 			}
-			if ( cgs.gametype >= GT_TEAM ) {
+			if ( cgs.gametype >= GT_TDM ) {
 				if ( i == 0 &&  teamName && *teamName ) {
 					Com_sprintf( filename, length, "models/players/%s%s/%s%s_%s.%s", headsFolder, headModelName, teamName, base, team, ext );
 				}
@@ -754,8 +754,7 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 		trap_Cvar_Set( "r_vertexlight", "0" );
 	}
 
-#ifdef MISSIONPACK
-	if( cgs.gametype >= GT_TEAM) {
+	if( cgs.gametype >= GT_TDM) {
 		if( ci->team == TEAM_BLUE ) {
 			Q_strncpyz(teamname, cg_blueTeamName.string, sizeof(teamname) );
 		} else {
@@ -765,7 +764,7 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 	if( teamname[0] ) {
 		strcat( teamname, "/" );
 	}
-#endif
+
 	modelloaded = qtrue;
 	if ( !CG_RegisterClientModelname( ci, ci->modelName, ci->skinName, ci->headModelName, ci->headSkinName, teamname ) ) {
 		if ( cg_buildScript.integer ) {
@@ -773,7 +772,7 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 		}
 
 		// fall back to default team name
-		if( cgs.gametype >= GT_TEAM) {
+		if( cgs.gametype >= GT_TDM) {
 			// keep skin name
 			if( ci->team == TEAM_BLUE ) {
 				Q_strncpyz(teamname, DEFAULT_BLUETEAM_NAME, sizeof(teamname) );
@@ -886,7 +885,7 @@ static qboolean CG_ScanForExistingClientInfo( clientInfo_t *ci ) {
 			&& !Q_stricmp( ci->headSkinName, match->headSkinName ) 
 			//&& !Q_stricmp( ci->blueTeam, match->blueTeam ) 
 			//&& !Q_stricmp( ci->redTeam, match->redTeam )
-			&& (cgs.gametype < GT_TEAM || ci->team == match->team) ) {
+			&& (cgs.gametype < GT_TDM || ci->team == match->team) ) {
 			// this clientinfo is identical, so use it's handles
 
 			ci->deferred = qfalse;
@@ -925,7 +924,7 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 			 Q_stricmp( ci->modelName, match->modelName ) ||
 //			 Q_stricmp( ci->headModelName, match->headModelName ) ||
 //			 Q_stricmp( ci->headSkinName, match->headSkinName ) ||
-			 (cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+			 (cgs.gametype >= GT_TDM && ci->team != match->team) ) {
 			continue;
 		}
 		// just load the real info cause it uses the same models and skins
@@ -934,14 +933,14 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 	}
 
 	// if we are in teamplay, only grab a model if the skin is correct
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype >= GT_TDM ) {
 		for ( i = 0 ; i < cgs.maxclients ; i++ ) {
 			match = &cgs.clientinfo[ i ];
 			if ( !match->infoValid || match->deferred ) {
 				continue;
 			}
 			if ( Q_stricmp( ci->skinName, match->skinName ) ||
-				(cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
+				(cgs.gametype >= GT_TDM && ci->team != match->team) ) {
 				continue;
 			}
 			ci->deferred = qtrue;
@@ -996,7 +995,7 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 
 	if ( cg_forceModel.integer || cg_enemyModel.string[0] || cg_teamModel.string[0] )
 	{
-		if ( cgs.gametype >= GT_TEAM )
+		if ( cgs.gametype >= GT_TDM )
 		{
 			// enemy model
 			if ( cg_enemyModel.string[0] && team != myTeam && team != TEAM_SPECTATOR ) {
@@ -1085,7 +1084,7 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 			}
 		} else { // not team game
 
-			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_SINGLE_PLAYER ) {
+			if ( pm_model && myClientNum != clientNum && cgs.gametype != GT_CAMPAIGN ) {
 				Q_strncpyz( modelName, infomodel, modelNameSize );
 
 				// strip skin name from model name
@@ -1106,7 +1105,7 @@ static void CG_SetSkinAndModel( clientInfo_t *newInfo,
 					newInfo->coloredSkin = qtrue;
 				}
 
-			} else if ( cg_enemyModel.string[0] && myClientNum != clientNum && !allowNativeModel && cgs.gametype != GT_SINGLE_PLAYER ) {
+			} else if ( cg_enemyModel.string[0] && myClientNum != clientNum && !allowNativeModel && cgs.gametype != GT_CAMPAIGN ) {
 
 				Q_strncpyz( modelName, cg_enemyModel.string, modelNameSize );
 
@@ -1207,7 +1206,7 @@ void CG_NewClientInfo( int clientNum ) {
 	}
 
 	allowNativeModel = qfalse;
-	if ( cgs.gametype < GT_TEAM ) {
+	if ( cgs.gametype < GT_TDM ) {
 		if ( !cg.snap || ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_FREE && cg.snap->ps.clientNum == clientNum ) ) {
 			if ( cg.demoPlayback || ( cg.snap && cg.snap->ps.pm_flags & PMF_FOLLOW ) ) {
 				allowNativeModel = qtrue;
@@ -1790,7 +1789,6 @@ static void CG_HasteTrail( centity_t *cent ) {
 }
 
 
-#ifdef MISSIONPACK
 /*
 ===============
 CG_BreathPuffs
@@ -1874,7 +1872,6 @@ static void CG_DustTrail( centity_t *cent ) {
 				  0,
 				  cgs.media.dustPuffShader );
 }
-#endif
 
 
 /*
@@ -2020,7 +2017,6 @@ static void CG_PlayerFlag( centity_t *cent, qhandle_t hSkin, refEntity_t *torso 
 }
 
 
-#ifdef MISSIONPACK // bk001204
 /*
 ===============
 CG_PlayerTokens
@@ -2085,7 +2081,6 @@ static void CG_PlayerTokens( centity_t *cent, int renderfx ) {
 		VectorCopy(trail->positions[i], origin);
 	}
 }
-#endif
 
 
 /*
@@ -2242,7 +2237,7 @@ static void CG_PlayerSprites( centity_t *cent ) {
 	team = cgs.clientinfo[ cent->currentState.clientNum ].team;
 	if ( !(cent->currentState.eFlags & EF_DEAD) && 
 		cg.snap->ps.persistant[PERS_TEAM] == team &&
-		cgs.gametype >= GT_TEAM) {
+		cgs.gametype >= GT_TDM) {
 		if (cg_drawFriend.integer) {
 			CG_PlayerFloatSprite( cent, cgs.media.friendShader );
 		}
@@ -2507,14 +2502,12 @@ void CG_Player( centity_t *cent ) {
 	int				renderfx;
 	qboolean		shadow;
 	float			shadowPlane;
-#ifdef MISSIONPACK
 	refEntity_t		skull;
 	refEntity_t		powerup;
 	int				t;
 	float			c;
 	float			angle;
 	vec3_t			dir, angles;
-#endif
 	qboolean		darken;
 
 	// the client number is stored in clientNum.  It can't be derived
@@ -2573,11 +2566,11 @@ void CG_Player( centity_t *cent ) {
 		renderfx |= RF_SHADOW_PLANE;
 	}
 	renderfx |= RF_LIGHTING_ORIGIN;			// use the same origin for all
-#ifdef MISSIONPACK
+
 	if( cgs.gametype == GT_HARVESTER ) {
 		CG_PlayerTokens( cent, renderfx );
 	}
-#endif
+
 	//
 	// add the legs
 	//
@@ -2641,7 +2634,6 @@ void CG_Player( centity_t *cent ) {
 
 	CG_AddRefEntityWithPowerups( &torso, &cent->currentState, ci->team );
 
-#ifdef MISSIONPACK
 	if ( cent->currentState.eFlags & EF_KAMIKAZE ) {
 
 		memset( &skull, 0, sizeof(skull) );
@@ -2843,7 +2835,7 @@ void CG_Player( centity_t *cent ) {
 		}
 		trap_R_AddRefEntityToScene( &powerup );
 	}
-#endif // MISSIONPACK
+
 
 	//
 	// add the head
@@ -2875,11 +2867,9 @@ void CG_Player( centity_t *cent ) {
 	
 	CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team );
 
-#ifdef MISSIONPACK
 	CG_BreathPuffs(cent, &head);
 
 	CG_DustTrail(cent);
-#endif
 
 	//
 	// add the gun / barrel / flash

@@ -178,23 +178,16 @@ void CG_SpawnEffect( const vec3_t origin ) {
 	else
 		re->u.shaderTime = cg.time / 1000.0f;
 
-#ifndef MISSIONPACK
-	re->customShader = cgs.media.teleportEffectShader;
-#endif
-	re->hModel = cgs.media.teleportEffectModel;
+	//re->customShader = cgs.media.teleportEffectShader;
+	//re->hModel = cgs.media.teleportEffectModel;
 	AxisClear( re->axis );
 
 	VectorCopy( origin, re->origin );
 
-#ifdef MISSIONPACK
-	re->origin[2] += 16;
-#else
 	re->origin[2] -= 24;
-#endif
 }
 
 
-#ifdef MISSIONPACK
 /*
 ===============
 CG_LightningBoltBeam
@@ -246,9 +239,9 @@ void CG_KamikazeEffect( vec3_t org ) {
 	re->reType = RT_MODEL;
 
 	if ( intShaderTime )
-		re->intShaderTime = cg.time;
+		re->u.intShaderTime = cg.time;
 	else
-		re->shaderTime = cg.time / 1000.0f;
+		re->u.shaderTime = cg.time / 1000.0f;
 
 	re->hModel = cgs.media.kamikazeEffectModel;
 
@@ -381,7 +374,6 @@ void CG_InvulnerabilityJuiced( vec3_t org ) {
 
 	trap_S_StartSound (org, ENTITYNUM_NONE, CHAN_BODY, cgs.media.invulnerabilityJuicedSound );
 }
-#endif
 
 
 /*

@@ -11,6 +11,7 @@ DarkMatter is a project that will ultimately provide a unified platform for enjo
 * Multi-team support
 * Entities and items: redo itemlist, adaptive ent handling per game, initial entity support across Q1, Q2, QL
 * Weapon slots system
+* Initial ruleset handling
 
 ## Links
 https://github.com/ec-/baseq3a

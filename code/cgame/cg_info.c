@@ -118,7 +118,7 @@ void CG_LoadingClient( int clientNum ) {
 	BG_CleanName( Info_ValueForKey( info, "n" ), personality, sizeof( personality ), "unknown client" );
 	BG_StripColor( personality );
 
-	if ( cgs.gametype == GT_SINGLE_PLAYER ) {
+	if ( cgs.gametype == GT_CAMPAIGN ) {
 		trap_S_RegisterSound( va( "sound/player/announce/%s.wav", personality ), qtrue );
 	}
 
@@ -242,38 +242,8 @@ void CG_DrawInformation( void ) {
 	}
 
 	// game type
-	switch ( cgs.gametype ) {
-	case GT_FFA:
-		s = "Free For All";
-		break;
-	case GT_SINGLE_PLAYER:
-		s = "Single Player";
-		break;
-	case GT_TOURNAMENT:
-		s = "Tournament";
-		break;
-	case GT_TEAM:
-		s = "Team Deathmatch";
-		break;
-	case GT_CTF:
-		s = "Capture The Flag";
-		break;
-#ifdef MISSIONPACK
-	case GT_1FCTF:
-		s = "One Flag CTF";
-		break;
-	case GT_OBELISK:
-		s = "Overload";
-		break;
-	case GT_HARVESTER:
-		s = "Harvester";
-		break;
-#endif
-	default:
-		BG_sprintf( buf, "Gametype #%i", cgs.gametype );
-		s = buf;
-		break;
-	}
+	s = gt[cgs.gametype].longName;
+
 	UI_DrawProportionalString( 320, y, s,
 		UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 	y += PROP_HEIGHT;

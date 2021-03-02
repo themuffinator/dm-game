@@ -11,16 +11,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\code\game\bg_lib.c">
+    <ClCompile Include="..\..\code\bgame\bg_gametypes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\bg_misc.c">
+    <ClCompile Include="..\..\code\bgame\bg_lib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\q_math.c">
+    <ClCompile Include="..\..\code\bgame\bg_misc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\q_shared.c">
+    <ClCompile Include="..\..\code\qcommon\q_math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\qcommon\q_shared.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\code\q3_ui\ui_addbots.c">
@@ -148,19 +151,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\code\game\bg_lib.h">
+    <ClInclude Include="..\..\code\bgame\bg_lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\game\bg_public.h">
+    <ClInclude Include="..\..\code\bgame\bg_public.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\q3_ui\keycodes.h">
+    <ClInclude Include="..\..\code\client\keycodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\game\match.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\game\q_shared.h">
+    <ClInclude Include="..\..\code\qcommon\q_shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\q3_ui\ui_local.h">

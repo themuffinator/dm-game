@@ -17,9 +17,9 @@ cg_servercmds
 cg_snapshot
 cg_view
 cg_weapons
-bg_slidemove
-bg_pmove
+bg_gametypes
 bg_lib
 bg_misc
+bg_pmove
 q_math
 q_shared

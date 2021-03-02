@@ -344,11 +344,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\ai_vcmd.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\code\game\bg_lib.c"
+				RelativePath="..\..\code\bgame\bg_lib.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -384,15 +380,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_misc.c"
+				RelativePath="..\..\code\bgame\bg_gametypes.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_pmove.c"
+				RelativePath="..\..\code\bgame\bg_misc.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_slidemove.c"
+				RelativePath="..\..\code\bgame\bg_pmove.c"
 				>
 			</File>
 			<File
@@ -488,11 +484,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_math.c"
+				RelativePath="..\..\code\qcommon\q_math.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_shared.c"
+				RelativePath="..\..\code\qcommon\q_shared.c"
 				>
 			</File>
 		</Filter>
@@ -526,55 +522,51 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\ai_vcmd.h"
+				RelativePath="..\..\code\botlib\be_aas.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_aas.h"
+				RelativePath="..\..\code\botlib\be_ai_char.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_char.h"
+				RelativePath="..\..\code\botlib\be_ai_chat.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_chat.h"
+				RelativePath="..\..\code\botlib\be_ai_gen.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_gen.h"
+				RelativePath="..\..\code\botlib\be_ai_goal.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_goal.h"
+				RelativePath="..\..\code\botlib\be_ai_move.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_move.h"
+				RelativePath="..\..\code\botlib\be_ai_weap.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ai_weap.h"
+				RelativePath="..\..\code\botlib\be_ea.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\be_ea.h"
+				RelativePath="..\..\code\bgame\bg_lib.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_lib.h"
+				RelativePath="..\..\code\bgame\bg_local.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_local.h"
+				RelativePath="..\..\code\bgame\bg_public.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_public.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\code\game\botlib.h"
+				RelativePath="..\..\code\botlib\botlib.h"
 				>
 			</File>
 			<File
@@ -590,10 +582,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\g_rankings.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\code\game\g_team.h"
 				>
 			</File>
@@ -606,11 +594,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_shared.h"
+				RelativePath="..\..\code\qcommon\q_shared.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\surfaceflags.h"
+				RelativePath="..\..\code\qcommon\surfaceflags.h"
 				>
 			</File>
 			<File

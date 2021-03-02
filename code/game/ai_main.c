@@ -12,23 +12,22 @@
 
 
 #include "g_local.h"
-#include "q_shared.h"
-#include "botlib.h"		//bot lib interface
-#include "be_aas.h"
-#include "be_ea.h"
-#include "be_ai_char.h"
-#include "be_ai_chat.h"
-#include "be_ai_gen.h"
-#include "be_ai_goal.h"
-#include "be_ai_move.h"
-#include "be_ai_weap.h"
+#include "../qcommon/q_shared.h"
+#include "../botlib/botlib.h"
+#include "../botlib/be_aas.h"
+#include "../botlib/be_ea.h"
+#include "../botlib/be_ai_char.h"
+#include "../botlib/be_ai_chat.h"
+#include "../botlib/be_ai_gen.h"
+#include "../botlib/be_ai_goal.h"
+#include "../botlib/be_ai_move.h"
+#include "../botlib/be_ai_weap.h"
 //
 #include "ai_main.h"
 #include "ai_dmq3.h"
 #include "ai_chat.h"
 #include "ai_cmd.h"
 #include "ai_dmnet.h"
-#include "ai_vcmd.h"
 
 //
 #include "chars.h"
@@ -280,8 +279,7 @@ void BotReportStatus(bot_state_t *bs) {
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-#ifdef MISSIONPACK
-	else if (gametype == GT_1FCTF) {
+	else if (gametype == GT_ONEFLAG) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
@@ -293,7 +291,6 @@ void BotReportStatus(bot_state_t *bs) {
 			else Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_BLUE"%2d", bs->inventory[INVENTORY_BLUECUBE]);
 		}
 	}
-#endif
 
 	switch(bs->ltgtype) {
 		case LTG_TEAMHELP:
@@ -429,8 +426,7 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			strcpy(carrying, "F ");
 		}
 	}
-#ifdef MISSIONPACK
-	else if (gametype == GT_1FCTF) {
+	else if (gametype == GT_ONEFLAG) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			strcpy(carrying, "F ");
 		}
@@ -441,7 +437,6 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			else Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_BLUECUBE]);
 		}
 	}
-#endif
 
 	switch(bs->ltgtype) {
 		case LTG_TEAMHELP:
@@ -644,8 +639,8 @@ void BotInterbreeding(void) {
 	trap_Cvar_Update(&bot_interbreedchar);
 	if (!strlen(bot_interbreedchar.string)) return;
 	//make sure we are in tournament mode
-	if (gametype != GT_TOURNAMENT) {
-		trap_Cvar_Set("g_gametype", va("%d", GT_TOURNAMENT));
+	if (gametype != GT_DUEL) {
+		trap_Cvar_Set("g_gametype", va("%d", GT_DUEL));
 		ExitLevel();
 		return;
 	}
@@ -1015,17 +1010,6 @@ int BotAI(int client, float thinktime) {
 			args[strlen(args)-1] = '\0';
 			trap_BotQueueConsoleMessage(bs->cs, CMS_CHAT, args);
 		}
-#ifdef MISSIONPACK
-		else if (!Q_stricmp(buf, "vchat")) {
-			BotVoiceChatCommand(bs, SAY_ALL, args);
-		}
-		else if (!Q_stricmp(buf, "vtchat")) {
-			BotVoiceChatCommand(bs, SAY_TEAM, args);
-		}
-		else if (!Q_stricmp(buf, "vtell")) {
-			BotVoiceChatCommand(bs, SAY_TELL, args);
-		}
-#endif
 		else if (!Q_stricmp(buf, "scores"))
 			{ /*FIXME: parse scores?*/ }
 		else if (!Q_stricmp(buf, "clientLevelShot"))
@@ -1380,9 +1364,7 @@ int BotAILoadMap( int restart ) {
 	return qtrue;
 }
 
-#ifdef MISSIONPACK
 void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace );
-#endif
 
 /*
 ==================
@@ -1501,7 +1483,6 @@ int BotAIStartFrame(int time) {
 				}
 				continue;
 			}
-#ifdef MISSIONPACK
 			// never link prox mine triggers
 			if (ent->r.contents == CONTENTS_TRIGGER) {
 				if (ent->touch == ProximityMine_Trigger) {
@@ -1509,7 +1490,6 @@ int BotAIStartFrame(int time) {
 					continue;
 				}
 			}
-#endif
 			//
 			memset(&state, 0, sizeof(bot_entitystate_t));
 			//
@@ -1676,9 +1656,8 @@ int BotInitLibrary( void ) {
 	if ( buf[0] ) 
 		trap_BotLibVarSet( "gamedir", buf );
 
-#ifdef MISSIONPACK
 	trap_BotLibDefine("MISSIONPACK");
-#endif
+
 	//setup the bot library
 	return trap_BotLibSetup();
 }

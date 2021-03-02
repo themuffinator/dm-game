@@ -350,7 +350,7 @@ static void UI_LoadBots( void ) {
 	ui_numBots = 0;
 
 	trap_Cvar_Register( &botsFile, "g_botsFile", "", CVAR_ARCHIVE | CVAR_LATCH );
-	if ( *botsFile.string && trap_Cvar_VariableValue( "ui_gametype" ) != GT_SINGLE_PLAYER ) {
+	if ( *botsFile.string && trap_Cvar_VariableValue( "ui_gametype" ) != GT_CAMPAIGN ) {
 		UI_LoadBotsFromFile( botsFile.string );
 	} else {
 		UI_LoadBotsFromFile( "scripts/bots.txt" );

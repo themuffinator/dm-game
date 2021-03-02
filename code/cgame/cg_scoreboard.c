@@ -113,14 +113,14 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 			}
 		} else if ( ci->handicap < 100 ) {
 			BG_sprintf( string, "%i", ci->handicap );
-			if ( cgs.gametype == GT_TOURNAMENT )
+			if ( cgs.gametype == GT_DUEL )
 				CG_DrawString( iconx, y - SMALLCHAR_HEIGHT/2, string, color, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_FORCE_COLOR );
 			else
 				CG_DrawString( iconx, y, string, color, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_FORCE_COLOR );
 		}
 
 		// draw the wins / losses
-		if ( cgs.gametype == GT_TOURNAMENT ) {
+		if ( cgs.gametype == GT_DUEL ) {
 			BG_sprintf( string, "%i/%i", ci->wins, ci->losses );
 			if( ci->handicap < 100 && !ci->botSkill ) {
 				CG_DrawString( iconx, y + SMALLCHAR_HEIGHT/2, string, color, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_FORCE_COLOR );
@@ -141,17 +141,6 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 		CG_DrawHead( headx, y, 16, 16, score->client, headAngles );
 	}
 
-#ifdef MISSIONPACK
-	// draw the team task
-	if ( ci->teamTask != TEAMTASK_NONE ) {
-		if ( ci->teamTask == TEAMTASK_OFFENSE ) {
-			CG_DrawPic( headx + 48, y, 16, 16, cgs.media.assaultShader );
-		}
-		else if ( ci->teamTask == TEAMTASK_DEFENSE ) {
-			CG_DrawPic( headx + 48, y, 16, 16, cgs.media.defendShader );
-		}
-	}
-#endif
 	// draw the score line
 	if ( score->ping == -1 ) {
 		BG_sprintf( string, " connecting" );
@@ -169,7 +158,7 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 		localClient = qtrue;
 
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR 
-			|| cgs.gametype >= GT_TEAM ) {
+			|| cgs.gametype >= GT_TDM ) {
 			rank = -1;
 		} else {
 			rank = cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG;
@@ -312,7 +301,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 		return qfalse;
 	}
 
-	if ( cgs.gametype == GT_SINGLE_PLAYER && cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
+	if ( cgs.gametype == GT_CAMPAIGN && cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
 		cg.deferredPlayerLoading = 0;
 		return qfalse;
 	}
@@ -345,7 +334,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 	}
 
 	// current rank
-	if ( cgs.gametype < GT_TEAM) {
+	if ( cgs.gametype < GT_TDM) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va( "%s place with %i",
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
@@ -390,7 +379,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 
 	localClient = qfalse;
 
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype >= GT_TDM ) {
 		//
 		// teamplay scoreboard
 		//
@@ -496,7 +485,7 @@ void CG_DrawOldTourneyScoreboard( void ) {
 	// print the two scores
 
 	y = 160;
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype >= GT_TDM ) {
 		//
 		// teamplay scoreboard
 		//

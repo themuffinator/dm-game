@@ -3,15 +3,15 @@
 #ifndef __UI_LOCAL_H__
 #define __UI_LOCAL_H__
 
-#include "../game/q_shared.h"
-#include "../cgame/tr_types.h"
+#include "../qcommon/q_shared.h"
+#include "../renderercommon/tr_types.h"
 //NOTE: include the ui_public.h from the new UI
 #include "../ui/ui_public.h" // bk001205 - yes, do have to use this
 //redefine to old API version
 #undef UI_API_VERSION
 #define UI_API_VERSION	4
-#include "keycodes.h"
-#include "../game/bg_public.h"
+#include "../client/keycodes.h"
+#include "../bgame/bg_public.h"
 
 typedef void (*voidfunc_f)(void);
 

@@ -4,7 +4,9 @@ rem make sure we have a safe environement
 set LIBRARY=
 set INCLUDE=
 
+set cmdir=..\..\..\..\code\qcommon
 set cgamedir=..\..\..\..\code\cgame
+set bgamedir=..\..\..\..\code\bgame
 set gamedir=..\..\..\..\code\game
 set uidir=..\..\..\..\code\q3_ui
 
@@ -66,19 +68,19 @@ cd vm\cgame
 %cc1% %cgamedir%\cg_view.c
 @if errorlevel 1 goto quit
 %cc1% %cgamedir%\cg_weapons.c
+@if errorlevel 1 goto quit
 
+%cc1% %bgamedir%\bg_gametypes.c
 @if errorlevel 1 goto quit
-%cc1% %gamedir%\bg_lib.c
+%cc1% %bgamedir%\bg_lib.c
 @if errorlevel 1 goto quit
-%cc1% %gamedir%\bg_misc.c
+%cc1% %bgamedir%\bg_misc.c
 @if errorlevel 1 goto quit
-%cc1% %gamedir%\bg_pmove.c
+%cc1% %bgamedir%\bg_pmove.c
 @if errorlevel 1 goto quit
-%cc1% %gamedir%\bg_slidemove.c
+%cc1% %cmdir%\q_math.c
 @if errorlevel 1 goto quit
-%cc1% %gamedir%\q_math.c
-@if errorlevel 1 goto quit
-%cc1% %gamedir%\q_shared.c
+%cc1% %cmdir%\q_shared.c
 @if errorlevel 1 goto quit
 
 @rem run assembler
@@ -113,15 +115,13 @@ cd vm\game
 @if errorlevel 1 goto quit
 %cc2% %gamedir%\ai_team.c
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\ai_vcmd.c
+%cc2% %bgamedir%\bg_gametypes.c
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\bg_lib.c
+%cc2% %bgamedir%\bg_lib.c
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\bg_misc.c 
+%cc2% %bgamedir%\bg_misc.c 
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\bg_pmove.c
-@if errorlevel 1 goto quit
-%cc2% %gamedir%\bg_slidemove.c 
+%cc2% %bgamedir%\bg_pmove.c
 @if errorlevel 1 goto quit
 %cc2% %gamedir%\g_active.c
 @if errorlevel 1 goto quit
@@ -165,9 +165,9 @@ cd vm\game
 @if errorlevel 1 goto quit
 %cc2% %gamedir%\g_weapon.c
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\q_math.c
+%cc2% %cmdir%\q_math.c
 @if errorlevel 1 goto quit
-%cc2% %gamedir%\q_shared.c
+%cc2% %cmdir%\q_shared.c
 @if errorlevel 1 goto quit
 
 @rem run assembler
@@ -267,13 +267,15 @@ cd vm\ui
 %cc3% %uidir%\ui_video.c  
 @if errorlevel 1 goto quit
 
-%cc3% %gamedir%\bg_lib.c 
+%cc3% %bgamedir%\bg_gametypes.c 
 @if errorlevel 1 goto quit
-%cc3% %gamedir%\bg_misc.c
+%cc3% %bgamedir%\bg_lib.c 
 @if errorlevel 1 goto quit
-%cc3% %gamedir%\q_math.c
+%cc3% %bgamedir%\bg_misc.c
 @if errorlevel 1 goto quit
-%cc3% %gamedir%\q_shared.c
+%cc3% %cmdir%\q_math.c
+@if errorlevel 1 goto quit
+%cc3% %cmdir%\q_shared.c
 @if errorlevel 1 goto quit
 
 @rem run assembler

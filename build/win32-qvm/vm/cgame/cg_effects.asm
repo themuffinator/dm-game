@@ -1,0 +1,5330 @@
+export CG_BubbleTrail
+code
+proc CG_BubbleTrail 88 4
+file "..\..\..\..\code\cgame\cg_effects.c"
+line 16
+;1:// Copyright (C) 1999-2000 Id Software, Inc.
+;2://
+;3:// cg_effects.c -- these functions generate localentities, usually as a result
+;4:// of event processing
+;5:
+;6:#include "cg_local.h"
+;7:
+;8:
+;9:/*
+;10:==================
+;11:CG_BubbleTrail
+;12:
+;13:Bullets shot underwater
+;14:==================
+;15:*/
+;16:void CG_BubbleTrail( const vec3_t start, const vec3_t end, float spacing ) {
+line 22
+;17:	vec3_t		move;
+;18:	vec3_t		vec;
+;19:	float		len;
+;20:	int			i;
+;21:
+;22:	if ( cg_noProjectileTrail.integer ) {
+ADDRGP4 cg_noProjectileTrail+12
+INDIRI4
+CNSTI4 0
+EQI4 $74
+line 23
+;23:		return;
+ADDRGP4 $73
+JUMPV
+LABELV $74
+line 26
+;24:	}
+;25:
+;26:	VectorCopy (start, move);
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 27
+;27:	VectorSubtract (end, start, vec);
+ADDRLP4 32
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 36
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 12
+ADDRLP4 32
+INDIRP4
+INDIRF4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 12+4
+ADDRLP4 32
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+ADDRLP4 36
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 12+8
+ADDRFP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+line 28
+;28:	len = VectorNormalize (vec);
+ADDRLP4 12
+ARGP4
+ADDRLP4 40
+ADDRGP4 VectorNormalize
+CALLF4
+ASGNF4
+ADDRLP4 28
+ADDRLP4 40
+INDIRF4
+ASGNF4
+line 31
+;29:
+;30:	// advance a random amount first
+;31:	i = rand() % (int)spacing;
+ADDRLP4 44
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 24
+ADDRLP4 44
+INDIRI4
+ADDRFP4 8
+INDIRF4
+CVFI4 4
+MODI4
+ASGNI4
+line 32
+;32:	VectorMA( move, i, vec, move );
+ADDRLP4 48
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+ASGNF4
+ADDRLP4 0
+ADDRLP4 0
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 48
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 0+4
+INDIRF4
+ADDRLP4 12+4
+INDIRF4
+ADDRLP4 48
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 0+8
+INDIRF4
+ADDRLP4 12+8
+INDIRF4
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+MULF4
+ADDF4
+ASGNF4
+line 34
+;33:
+;34:	VectorScale (vec, spacing, vec);
+ADDRLP4 52
+ADDRFP4 8
+INDIRF4
+ASGNF4
+ADDRLP4 12
+ADDRLP4 12
+INDIRF4
+ADDRLP4 52
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 12+4
+ADDRLP4 12+4
+INDIRF4
+ADDRLP4 52
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 12+8
+ADDRLP4 12+8
+INDIRF4
+ADDRFP4 8
+INDIRF4
+MULF4
+ASGNF4
+line 36
+;35:
+;36:	for ( ; i < len; i += spacing ) {
+ADDRGP4 $92
+JUMPV
+LABELV $89
+line 40
+;37:		localEntity_t	*le;
+;38:		refEntity_t		*re;
+;39:
+;40:		le = CG_AllocLocalEntity();
+ADDRLP4 64
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 56
+ADDRLP4 64
+INDIRP4
+ASGNP4
+line 41
+;41:		le->leFlags = LEF_PUFF_DONT_SCALE;
+ADDRLP4 56
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 1
+ASGNI4
+line 42
+;42:		le->leType = LE_MOVE_SCALE_FADE;
+ADDRLP4 56
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 4
+ASGNI4
+line 43
+;43:		le->startTime = cg.time;
+ADDRLP4 56
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 44
+;44:		le->endTime = cg.time + 1000 + random() * 250;
+ADDRLP4 68
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 1000
+ADDI4
+CVIF4 4
+ADDRLP4 68
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 1006240244
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+line 45
+;45:		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 56
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 56
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 47
+;46:
+;47:		re = &le->refEntity;
+ADDRLP4 60
+ADDRLP4 56
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 48
+;48:		if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $95
+line 49
+;49:			re->u.intShaderTime = cg.time;
+ADDRLP4 60
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+ADDRGP4 $96
+JUMPV
+LABELV $95
+line 51
+;50:		else
+;51:			re->u.shaderTime = cg.time / 1000.0f;
+ADDRLP4 60
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $96
+line 53
+;52:
+;53:		re->reType = RT_SPRITE;
+ADDRLP4 60
+INDIRP4
+CNSTI4 2
+ASGNI4
+line 54
+;54:		re->rotation = 0;
+ADDRLP4 60
+INDIRP4
+CNSTI4 136
+ADDP4
+CNSTF4 0
+ASGNF4
+line 55
+;55:		re->radius = 3;
+ADDRLP4 60
+INDIRP4
+CNSTI4 132
+ADDP4
+CNSTF4 1077936128
+ASGNF4
+line 56
+;56:		re->customShader = cgs.media.waterBubbleShader;
+ADDRLP4 60
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRGP4 cgs+148692+324
+INDIRI4
+ASGNI4
+line 57
+;57:		re->shaderRGBA[0] = 0xff;
+ADDRLP4 60
+INDIRP4
+CNSTI4 116
+ADDP4
+CNSTU1 255
+ASGNU1
+line 58
+;58:		re->shaderRGBA[1] = 0xff;
+ADDRLP4 60
+INDIRP4
+CNSTI4 117
+ADDP4
+CNSTU1 255
+ASGNU1
+line 59
+;59:		re->shaderRGBA[2] = 0xff;
+ADDRLP4 60
+INDIRP4
+CNSTI4 118
+ADDP4
+CNSTU1 255
+ASGNU1
+line 60
+;60:		re->shaderRGBA[3] = 0xff;
+ADDRLP4 60
+INDIRP4
+CNSTI4 119
+ADDP4
+CNSTU1 255
+ASGNU1
+line 62
+;61:
+;62:		le->color[3] = 1.0;
+ADDRLP4 56
+INDIRP4
+CNSTI4 120
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 64
+;63:
+;64:		le->pos.trType = TR_LINEAR;
+ADDRLP4 56
+INDIRP4
+CNSTI4 32
+ADDP4
+CNSTI4 2
+ASGNI4
+line 65
+;65:		le->pos.trTime = cg.time;
+ADDRLP4 56
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 66
+;66:		VectorCopy( move, le->pos.trBase );
+ADDRLP4 56
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRLP4 0
+INDIRB
+ASGNB 12
+line 67
+;67:		le->pos.trDelta[0] = crandom()*5;
+ADDRLP4 76
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 56
+ADDP4
+ADDRLP4 76
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1092616192
+MULF4
+ASGNF4
+line 68
+;68:		le->pos.trDelta[1] = crandom()*5;
+ADDRLP4 80
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 60
+ADDP4
+ADDRLP4 80
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1092616192
+MULF4
+ASGNF4
+line 69
+;69:		le->pos.trDelta[2] = crandom()*5 + 6;
+ADDRLP4 84
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 64
+ADDP4
+ADDRLP4 84
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1092616192
+MULF4
+CNSTF4 1086324736
+ADDF4
+ASGNF4
+line 71
+;70:
+;71:		VectorAdd (move, vec, move);
+ADDRLP4 0
+ADDRLP4 0
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 0+4
+INDIRF4
+ADDRLP4 12+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 0+8
+INDIRF4
+ADDRLP4 12+8
+INDIRF4
+ADDF4
+ASGNF4
+line 72
+;72:	}
+LABELV $90
+line 36
+ADDRLP4 24
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+ADDRFP4 8
+INDIRF4
+ADDF4
+CVFI4 4
+ASGNI4
+LABELV $92
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+ADDRLP4 28
+INDIRF4
+LTF4 $89
+line 73
+;73:}
+LABELV $73
+endproc CG_BubbleTrail 88 4
+data
+align 4
+LABELV $109
+byte 4 146
+export CG_SmokePuff
+code
+proc CG_SmokePuff 52 4
+line 89
+;74:
+;75:/*
+;76:=====================
+;77:CG_SmokePuff
+;78:
+;79:Adds a smoke puff or blood trail localEntity.
+;80:=====================
+;81:*/
+;82:localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel, 
+;83:				   float radius,
+;84:				   float r, float g, float b, float a,
+;85:				   float duration,
+;86:				   int startTime,
+;87:				   int fadeInTime,
+;88:				   int leFlags,
+;89:				   qhandle_t hShader ) {
+line 95
+;90:	static int	seed = 0x92;
+;91:	localEntity_t	*le;
+;92:	refEntity_t		*re;
+;93://	int fadeInTime = startTime + duration / 2;
+;94:
+;95:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 96
+;96:	le->leFlags = leFlags;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ADDRFP4 40
+INDIRI4
+ASGNI4
+line 97
+;97:	le->radius = radius;
+ADDRLP4 0
+INDIRP4
+CNSTI4 124
+ADDP4
+ADDRFP4 8
+INDIRF4
+ASGNF4
+line 99
+;98:
+;99:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 100
+;100:	re->rotation = Q_random( &seed ) * 360;
+ADDRGP4 $109
+ARGP4
+ADDRLP4 12
+ADDRGP4 Q_random
+CALLF4
+ASGNF4
+ADDRLP4 4
+INDIRP4
+CNSTI4 136
+ADDP4
+ADDRLP4 12
+INDIRF4
+CNSTF4 1135869952
+MULF4
+ASGNF4
+line 101
+;101:	re->radius = radius;
+ADDRLP4 4
+INDIRP4
+CNSTI4 132
+ADDP4
+ADDRFP4 8
+INDIRF4
+ASGNF4
+line 103
+;102:
+;103:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $110
+line 104
+;104:		re->u.intShaderTime = startTime;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRFP4 32
+INDIRI4
+ASGNI4
+ADDRGP4 $111
+JUMPV
+LABELV $110
+line 106
+;105:	else
+;106:		re->u.shaderTime = startTime / 1000.0f;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRFP4 32
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $111
+line 108
+;107:
+;108:	le->leType = LE_MOVE_SCALE_FADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 4
+ASGNI4
+line 109
+;109:	le->startTime = startTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRFP4 32
+INDIRI4
+ASGNI4
+line 110
+;110:	le->fadeInTime = fadeInTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 36
+INDIRI4
+ASGNI4
+line 111
+;111:	le->endTime = startTime + duration;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRFP4 32
+INDIRI4
+CVIF4 4
+ADDRFP4 28
+INDIRF4
+ADDF4
+CVFI4 4
+ASGNI4
+line 112
+;112:	if ( fadeInTime > startTime ) {
+ADDRFP4 36
+INDIRI4
+ADDRFP4 32
+INDIRI4
+LEI4 $112
+line 113
+;113:		le->lifeRate = 1.0 / ( le->endTime - le->fadeInTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 114
+;114:	}
+ADDRGP4 $113
+JUMPV
+LABELV $112
+line 115
+;115:	else {
+line 116
+;116:		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 117
+;117:	}
+LABELV $113
+line 118
+;118:	le->color[0] = r;
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRFP4 12
+INDIRF4
+ASGNF4
+line 119
+;119:	le->color[1] = g; 
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRFP4 16
+INDIRF4
+ASGNF4
+line 120
+;120:	le->color[2] = b;
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRFP4 20
+INDIRF4
+ASGNF4
+line 121
+;121:	le->color[3] = a;
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRFP4 24
+INDIRF4
+ASGNF4
+line 124
+;122:
+;123:
+;124:	le->pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 32
+ADDP4
+CNSTI4 2
+ASGNI4
+line 125
+;125:	le->pos.trTime = startTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRFP4 32
+INDIRI4
+ASGNI4
+line 126
+;126:	VectorCopy( vel, le->pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 56
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 127
+;127:	VectorCopy( p, le->pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 129
+;128:
+;129:	VectorCopy( p, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 130
+;130:	re->customShader = hShader;
+ADDRLP4 4
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRFP4 44
+INDIRI4
+ASGNI4
+line 133
+;131:
+;132:	// rage pro can't alpha fade, so use a different shader
+;133:	if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
+ADDRGP4 cgs+20100+11288
+INDIRI4
+CNSTI4 3
+NEI4 $114
+line 134
+;134:		re->customShader = cgs.media.smokePuffRageProShader;
+ADDRLP4 4
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRGP4 cgs+148692+312
+INDIRI4
+ASGNI4
+line 135
+;135:		re->shaderRGBA[0] = 0xff;
+ADDRLP4 4
+INDIRP4
+CNSTI4 116
+ADDP4
+CNSTU1 255
+ASGNU1
+line 136
+;136:		re->shaderRGBA[1] = 0xff;
+ADDRLP4 4
+INDIRP4
+CNSTI4 117
+ADDP4
+CNSTU1 255
+ASGNU1
+line 137
+;137:		re->shaderRGBA[2] = 0xff;
+ADDRLP4 4
+INDIRP4
+CNSTI4 118
+ADDP4
+CNSTU1 255
+ASGNU1
+line 138
+;138:		re->shaderRGBA[3] = 0xff;
+ADDRLP4 4
+INDIRP4
+CNSTI4 119
+ADDP4
+CNSTU1 255
+ASGNU1
+line 139
+;139:	} else {
+ADDRGP4 $115
+JUMPV
+LABELV $114
+line 140
+;140:		re->shaderRGBA[0] = le->color[0] * 0xff;
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRF4
+CNSTF4 1132396544
+MULF4
+ASGNF4
+ADDRLP4 24
+CNSTF4 1325400064
+ASGNF4
+ADDRLP4 20
+INDIRF4
+ADDRLP4 24
+INDIRF4
+LTF4 $121
+ADDRLP4 16
+ADDRLP4 20
+INDIRF4
+ADDRLP4 24
+INDIRF4
+SUBF4
+CVFI4 4
+CVIU4 4
+CNSTU4 2147483648
+ADDU4
+ASGNU4
+ADDRGP4 $122
+JUMPV
+LABELV $121
+ADDRLP4 16
+ADDRLP4 20
+INDIRF4
+CVFI4 4
+CVIU4 4
+ASGNU4
+LABELV $122
+ADDRLP4 4
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 16
+INDIRU4
+CVUU1 4
+ASGNU1
+line 141
+;141:		re->shaderRGBA[1] = le->color[1] * 0xff;
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+INDIRF4
+CNSTF4 1132396544
+MULF4
+ASGNF4
+ADDRLP4 36
+CNSTF4 1325400064
+ASGNF4
+ADDRLP4 32
+INDIRF4
+ADDRLP4 36
+INDIRF4
+LTF4 $124
+ADDRLP4 28
+ADDRLP4 32
+INDIRF4
+ADDRLP4 36
+INDIRF4
+SUBF4
+CVFI4 4
+CVIU4 4
+CNSTU4 2147483648
+ADDU4
+ASGNU4
+ADDRGP4 $125
+JUMPV
+LABELV $124
+ADDRLP4 28
+ADDRLP4 32
+INDIRF4
+CVFI4 4
+CVIU4 4
+ASGNU4
+LABELV $125
+ADDRLP4 4
+INDIRP4
+CNSTI4 117
+ADDP4
+ADDRLP4 28
+INDIRU4
+CVUU1 4
+ASGNU1
+line 142
+;142:		re->shaderRGBA[2] = le->color[2] * 0xff;
+ADDRLP4 44
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+INDIRF4
+CNSTF4 1132396544
+MULF4
+ASGNF4
+ADDRLP4 48
+CNSTF4 1325400064
+ASGNF4
+ADDRLP4 44
+INDIRF4
+ADDRLP4 48
+INDIRF4
+LTF4 $127
+ADDRLP4 40
+ADDRLP4 44
+INDIRF4
+ADDRLP4 48
+INDIRF4
+SUBF4
+CVFI4 4
+CVIU4 4
+CNSTU4 2147483648
+ADDU4
+ASGNU4
+ADDRGP4 $128
+JUMPV
+LABELV $127
+ADDRLP4 40
+ADDRLP4 44
+INDIRF4
+CVFI4 4
+CVIU4 4
+ASGNU4
+LABELV $128
+ADDRLP4 4
+INDIRP4
+CNSTI4 118
+ADDP4
+ADDRLP4 40
+INDIRU4
+CVUU1 4
+ASGNU1
+line 143
+;143:		re->shaderRGBA[3] = 0xff;
+ADDRLP4 4
+INDIRP4
+CNSTI4 119
+ADDP4
+CNSTU1 255
+ASGNU1
+line 144
+;144:	}
+LABELV $115
+line 146
+;145:
+;146:	re->reType = RT_SPRITE;
+ADDRLP4 4
+INDIRP4
+CNSTI4 2
+ASGNI4
+line 147
+;147:	re->radius = le->radius;
+ADDRLP4 4
+INDIRP4
+CNSTI4 132
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 124
+ADDP4
+INDIRF4
+ASGNF4
+line 149
+;148:
+;149:	return le;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $108
+endproc CG_SmokePuff 52 4
+export CG_SpawnEffect
+proc CG_SpawnEffect 28 4
+line 159
+;150:}
+;151:
+;152:/*
+;153:==================
+;154:CG_SpawnEffect
+;155:
+;156:Player teleporting in or out
+;157:==================
+;158:*/
+;159:void CG_SpawnEffect( const vec3_t origin ) {
+line 163
+;160:	localEntity_t	*le;
+;161:	refEntity_t		*re;
+;162:
+;163:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 164
+;164:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 165
+;165:	le->leType = LE_FADE_RGB;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 6
+ASGNI4
+line 166
+;166:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 167
+;167:	le->endTime = cg.time + 500;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 500
+ADDI4
+ASGNI4
+line 168
+;168:	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 170
+;169:
+;170:	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+ADDRLP4 20
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+line 172
+;171:
+;172:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 174
+;173:
+;174:	re->reType = RT_MODEL;
+ADDRLP4 4
+INDIRP4
+CNSTI4 0
+ASGNI4
+line 176
+;175:
+;176:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $132
+line 177
+;177:		re->u.intShaderTime = cg.time;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+ADDRGP4 $133
+JUMPV
+LABELV $132
+line 179
+;178:	else
+;179:		re->u.shaderTime = cg.time / 1000.0f;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $133
+line 183
+;180:
+;181:	//re->customShader = cgs.media.teleportEffectShader;
+;182:	//re->hModel = cgs.media.teleportEffectModel;
+;183:	AxisClear( re->axis );
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AxisClear
+CALLV
+pop
+line 185
+;184:
+;185:	VectorCopy( origin, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 187
+;186:
+;187:	re->origin[2] -= 24;
+ADDRLP4 24
+ADDRLP4 4
+INDIRP4
+CNSTI4 76
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CNSTF4 1103101952
+SUBF4
+ASGNF4
+line 188
+;188:}
+LABELV $129
+endproc CG_SpawnEffect 28 4
+export CG_LightningBoltBeam
+proc CG_LightningBoltBeam 12 0
+line 196
+;189:
+;190:
+;191:/*
+;192:===============
+;193:CG_LightningBoltBeam
+;194:===============
+;195:*/
+;196:void CG_LightningBoltBeam( vec3_t start, vec3_t end ) {
+line 200
+;197:	localEntity_t	*le;
+;198:	refEntity_t		*beam;
+;199:
+;200:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 201
+;201:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 202
+;202:	le->leType = LE_SHOWREFENTITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 12
+ASGNI4
+line 203
+;203:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 204
+;204:	le->endTime = cg.time + 50;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 50
+ADDI4
+ASGNI4
+line 206
+;205:
+;206:	beam = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 208
+;207:
+;208:	VectorCopy( start, beam->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 210
+;209:	// this is the end point
+;210:	VectorCopy( end, beam->oldorigin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 212
+;211:
+;212:	beam->reType = RT_LIGHTNING;
+ADDRLP4 4
+INDIRP4
+CNSTI4 6
+ASGNI4
+line 213
+;213:	beam->customShader = cgs.media.lightningShader;
+ADDRLP4 4
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRGP4 cgs+148692+228
+INDIRI4
+ASGNI4
+line 214
+;214:}
+LABELV $136
+endproc CG_LightningBoltBeam 12 0
+export CG_KamikazeEffect
+proc CG_KamikazeEffect 24 0
+line 222
+;215:
+;216:
+;217:/*
+;218:==================
+;219:CG_KamikazeEffect
+;220:==================
+;221:*/
+;222:void CG_KamikazeEffect( vec3_t org ) {
+line 226
+;223:	localEntity_t	*le;
+;224:	refEntity_t		*re;
+;225:
+;226:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 227
+;227:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 228
+;228:	le->leType = LE_KAMIKAZE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 9
+ASGNI4
+line 229
+;229:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 230
+;230:	le->endTime = cg.time + 3000;//2250;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 3000
+ADDI4
+ASGNI4
+line 231
+;231:	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 233
+;232:
+;233:	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+ADDRLP4 20
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 20
+INDIRF4
+ASGNF4
+line 235
+;234:
+;235:	VectorClear(le->angles.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 80
+ADDP4
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 88
+ADDP4
+CNSTF4 0
+ASGNF4
+line 237
+;236:
+;237:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 239
+;238:
+;239:	re->reType = RT_MODEL;
+ADDRLP4 4
+INDIRP4
+CNSTI4 0
+ASGNI4
+line 241
+;240:
+;241:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $144
+line 242
+;242:		re->u.intShaderTime = cg.time;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+ADDRGP4 $145
+JUMPV
+LABELV $144
+line 244
+;243:	else
+;244:		re->u.shaderTime = cg.time / 1000.0f;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $145
+line 246
+;245:
+;246:	re->hModel = cgs.media.kamikazeEffectModel;
+ADDRLP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRGP4 cgs+148692+516
+INDIRI4
+ASGNI4
+line 248
+;247:
+;248:	VectorCopy( org, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 250
+;249:
+;250:}
+LABELV $141
+endproc CG_KamikazeEffect 24 0
+export CG_ObeliskExplode
+proc CG_ObeliskExplode 20 24
+line 257
+;251:
+;252:/*
+;253:==================
+;254:CG_ObeliskExplode
+;255:==================
+;256:*/
+;257:void CG_ObeliskExplode( vec3_t org, int entityNum ) {
+line 262
+;258:	localEntity_t	*le;
+;259:	vec3_t origin;
+;260:
+;261:	// create an explosion
+;262:	VectorCopy( org, origin );
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 263
+;263:	origin[2] += 64;
+ADDRLP4 4+8
+ADDRLP4 4+8
+INDIRF4
+CNSTF4 1115684864
+ADDF4
+ASGNF4
+line 264
+;264:	le = CG_MakeExplosion( origin, vec3_origin,
+ADDRLP4 4
+ARGP4
+ADDRGP4 vec3_origin
+ARGP4
+ADDRGP4 cgs+148692+480
+INDIRI4
+ARGI4
+ADDRGP4 cgs+148692+500
+INDIRI4
+ARGI4
+CNSTI4 600
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRLP4 16
+ADDRGP4 CG_MakeExplosion
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 16
+INDIRP4
+ASGNP4
+line 268
+;265:						   cgs.media.dishFlashModel,
+;266:						   cgs.media.rocketExplosionShader,
+;267:						   600, qtrue );
+;268:	le->light = 300;
+ADDRLP4 0
+INDIRP4
+CNSTI4 128
+ADDP4
+CNSTF4 1133903872
+ASGNF4
+line 269
+;269:	le->lightColor[0] = 1;
+ADDRLP4 0
+INDIRP4
+CNSTI4 132
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 270
+;270:	le->lightColor[1] = 0.75;
+ADDRLP4 0
+INDIRP4
+CNSTI4 136
+ADDP4
+CNSTF4 1061158912
+ASGNF4
+line 271
+;271:	le->lightColor[2] = 0.0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+CNSTF4 0
+ASGNF4
+line 272
+;272:}
+LABELV $150
+endproc CG_ObeliskExplode 20 24
+export CG_ObeliskPain
+proc CG_ObeliskPain 12 16
+line 279
+;273:
+;274:/*
+;275:==================
+;276:CG_ObeliskPain
+;277:==================
+;278:*/
+;279:void CG_ObeliskPain( vec3_t org ) {
+line 284
+;280:	float r;
+;281:	sfxHandle_t sfx;
+;282:
+;283:	// hit sound
+;284:	r = rand() & 3;
+ADDRLP4 8
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 8
+INDIRI4
+CNSTI4 3
+BANDI4
+CVIF4 4
+ASGNF4
+line 285
+;285:	if ( r < 2 ) {
+ADDRLP4 0
+INDIRF4
+CNSTF4 1073741824
+GEF4 $157
+line 286
+;286:		sfx = cgs.media.obeliskHitSound1;
+ADDRLP4 4
+ADDRGP4 cgs+148692+836
+INDIRI4
+ASGNI4
+line 287
+;287:	} else if ( r == 2 ) {
+ADDRGP4 $158
+JUMPV
+LABELV $157
+ADDRLP4 0
+INDIRF4
+CNSTF4 1073741824
+NEF4 $161
+line 288
+;288:		sfx = cgs.media.obeliskHitSound2;
+ADDRLP4 4
+ADDRGP4 cgs+148692+840
+INDIRI4
+ASGNI4
+line 289
+;289:	} else {
+ADDRGP4 $162
+JUMPV
+LABELV $161
+line 290
+;290:		sfx = cgs.media.obeliskHitSound3;
+ADDRLP4 4
+ADDRGP4 cgs+148692+844
+INDIRI4
+ASGNI4
+line 291
+;291:	}
+LABELV $162
+LABELV $158
+line 292
+;292:	trap_S_StartSound ( org, ENTITYNUM_NONE, CHAN_BODY, sfx );
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 1023
+ARGI4
+CNSTI4 5
+ARGI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRGP4 trap_S_StartSound
+CALLV
+pop
+line 293
+;293:}
+LABELV $156
+endproc CG_ObeliskPain 12 16
+export CG_InvulnerabilityImpact
+proc CG_InvulnerabilityImpact 36 16
+line 301
+;294:
+;295:
+;296:/*
+;297:==================
+;298:CG_InvulnerabilityImpact
+;299:==================
+;300:*/
+;301:void CG_InvulnerabilityImpact( vec3_t org, vec3_t angles ) {
+line 307
+;302:	localEntity_t	*le;
+;303:	refEntity_t		*re;
+;304:	int				r;
+;305:	sfxHandle_t		sfx;
+;306:
+;307:	le = CG_AllocLocalEntity();
+ADDRLP4 16
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 16
+INDIRP4
+ASGNP4
+line 308
+;308:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 309
+;309:	le->leType = LE_INVULIMPACT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 10
+ASGNI4
+line 310
+;310:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 311
+;311:	le->endTime = cg.time + 1000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 1000
+ADDI4
+ASGNI4
+line 312
+;312:	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 314
+;313:
+;314:	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+ADDRLP4 28
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRLP4 28
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 28
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 28
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 28
+INDIRF4
+ASGNF4
+line 316
+;315:
+;316:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 318
+;317:
+;318:	re->reType = RT_MODEL;
+ADDRLP4 4
+INDIRP4
+CNSTI4 0
+ASGNI4
+line 320
+;319:
+;320:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $170
+line 321
+;321:		re->u.intShaderTime = cg.time;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+ADDRGP4 $171
+JUMPV
+LABELV $170
+line 323
+;322:	else
+;323:		re->u.shaderTime = cg.time / 1000.0f;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $171
+line 325
+;324:
+;325:	re->hModel = cgs.media.invulnerabilityImpactModel;
+ADDRLP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRGP4 cgs+148692+548
+INDIRI4
+ASGNI4
+line 327
+;326:
+;327:	VectorCopy( org, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 328
+;328:	AnglesToAxis( angles, re->axis );
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AnglesToAxis
+CALLV
+pop
+line 330
+;329:
+;330:	r = rand() & 3;
+ADDRLP4 32
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 8
+ADDRLP4 32
+INDIRI4
+CNSTI4 3
+BANDI4
+ASGNI4
+line 331
+;331:	if ( r < 2 ) {
+ADDRLP4 8
+INDIRI4
+CNSTI4 2
+GEI4 $176
+line 332
+;332:		sfx = cgs.media.invulnerabilityImpactSound1;
+ADDRLP4 12
+ADDRGP4 cgs+148692+820
+INDIRI4
+ASGNI4
+line 333
+;333:	} else if ( r == 2 ) {
+ADDRGP4 $177
+JUMPV
+LABELV $176
+ADDRLP4 8
+INDIRI4
+CNSTI4 2
+NEI4 $180
+line 334
+;334:		sfx = cgs.media.invulnerabilityImpactSound2;
+ADDRLP4 12
+ADDRGP4 cgs+148692+824
+INDIRI4
+ASGNI4
+line 335
+;335:	} else {
+ADDRGP4 $181
+JUMPV
+LABELV $180
+line 336
+;336:		sfx = cgs.media.invulnerabilityImpactSound3;
+ADDRLP4 12
+ADDRGP4 cgs+148692+828
+INDIRI4
+ASGNI4
+line 337
+;337:	}
+LABELV $181
+LABELV $177
+line 338
+;338:	trap_S_StartSound (org, ENTITYNUM_NONE, CHAN_BODY, sfx );
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 1023
+ARGI4
+CNSTI4 5
+ARGI4
+ADDRLP4 12
+INDIRI4
+ARGI4
+ADDRGP4 trap_S_StartSound
+CALLV
+pop
+line 339
+;339:}
+LABELV $167
+endproc CG_InvulnerabilityImpact 36 16
+export CG_InvulnerabilityJuiced
+proc CG_InvulnerabilityJuiced 36 16
+line 346
+;340:
+;341:/*
+;342:==================
+;343:CG_InvulnerabilityJuiced
+;344:==================
+;345:*/
+;346:void CG_InvulnerabilityJuiced( vec3_t org ) {
+line 351
+;347:	localEntity_t	*le;
+;348:	refEntity_t		*re;
+;349:	vec3_t			angles;
+;350:
+;351:	le = CG_AllocLocalEntity();
+ADDRLP4 20
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 20
+INDIRP4
+ASGNP4
+line 352
+;352:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 353
+;353:	le->leType = LE_INVULJUICED;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 11
+ASGNI4
+line 354
+;354:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 355
+;355:	le->endTime = cg.time + 10000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 10000
+ADDI4
+ASGNI4
+line 356
+;356:	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 358
+;357:
+;358:	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+ADDRLP4 32
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+line 360
+;359:
+;360:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 362
+;361:
+;362:	re->reType = RT_MODEL;
+ADDRLP4 4
+INDIRP4
+CNSTI4 0
+ASGNI4
+line 364
+;363:
+;364:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $189
+line 365
+;365:		re->u.intShaderTime = cg.time;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+ADDRGP4 $190
+JUMPV
+LABELV $189
+line 367
+;366:	else
+;367:		re->u.shaderTime = cg.time / 1000.0f;
+ADDRLP4 4
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $190
+line 369
+;368:
+;369:	re->hModel = cgs.media.invulnerabilityJuicedModel;
+ADDRLP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRGP4 cgs+148692+552
+INDIRI4
+ASGNI4
+line 371
+;370:
+;371:	VectorCopy( org, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 372
+;372:	VectorClear(angles);
+ADDRLP4 8
+CNSTF4 0
+ASGNF4
+ADDRLP4 8+4
+CNSTF4 0
+ASGNF4
+ADDRLP4 8+8
+CNSTF4 0
+ASGNF4
+line 373
+;373:	AnglesToAxis( angles, re->axis );
+ADDRLP4 8
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AnglesToAxis
+CALLV
+pop
+line 375
+;374:
+;375:	trap_S_StartSound (org, ENTITYNUM_NONE, CHAN_BODY, cgs.media.invulnerabilityJuicedSound );
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 1023
+ARGI4
+CNSTI4 5
+ARGI4
+ADDRGP4 cgs+148692+832
+INDIRI4
+ARGI4
+ADDRGP4 trap_S_StartSound
+CALLV
+pop
+line 376
+;376:}
+LABELV $186
+endproc CG_InvulnerabilityJuiced 36 16
+bss
+align 4
+LABELV $200
+skip 12
+export CG_ScorePlum
+code
+proc CG_ScorePlum 44 8
+line 384
+;377:
+;378:
+;379:/*
+;380:==================
+;381:CG_ScorePlum
+;382:==================
+;383:*/
+;384:void CG_ScorePlum( int client, const vec3_t origin, int score ) {
+line 391
+;385:	localEntity_t	*le;
+;386:	refEntity_t		*re;
+;387:	vec3_t			angles;
+;388:	static vec3_t lastPos;
+;389:
+;390:	// only visualize for the client that scored
+;391:	if (client != cg.predictedPlayerState.clientNum || cg_scorePlum.integer == 0) {
+ADDRFP4 0
+INDIRI4
+ADDRGP4 cg+107636+140
+INDIRI4
+NEI4 $206
+ADDRGP4 cg_scorePlum+12
+INDIRI4
+CNSTI4 0
+NEI4 $201
+LABELV $206
+line 392
+;392:		return;
+ADDRGP4 $199
+JUMPV
+LABELV $201
+line 395
+;393:	}
+;394:
+;395:	le = CG_AllocLocalEntity();
+ADDRLP4 20
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 20
+INDIRP4
+ASGNP4
+line 396
+;396:	le->leFlags = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 397
+;397:	le->leType = LE_SCOREPLUM;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 8
+ASGNI4
+line 398
+;398:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 399
+;399:	le->endTime = cg.time + 4000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+CNSTI4 4000
+ADDI4
+ASGNI4
+line 400
+;400:	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+CNSTF4 1065353216
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 403
+;401:
+;402:	
+;403:	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+ADDRLP4 32
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 120
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+line 404
+;404:	le->radius = score;
+ADDRLP4 0
+INDIRP4
+CNSTI4 124
+ADDP4
+ADDRFP4 8
+INDIRI4
+CVIF4 4
+ASGNF4
+line 406
+;405:	
+;406:	VectorCopy( origin, le->pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 407
+;407:	if ( origin[2] >= lastPos[2] - 20 && origin[2] <= lastPos[2] + 20 ) {
+ADDRLP4 36
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+ADDRGP4 $200+8
+INDIRF4
+CNSTF4 1101004800
+SUBF4
+LTF4 $209
+ADDRLP4 36
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+ADDRGP4 $200+8
+INDIRF4
+CNSTF4 1101004800
+ADDF4
+GTF4 $209
+line 408
+;408:		le->pos.trBase[2] -= 20;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 52
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRF4
+CNSTF4 1101004800
+SUBF4
+ASGNF4
+line 409
+;409:	}
+LABELV $209
+line 412
+;410:
+;411:	//CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)Distance(org, lastPos));
+;412:	VectorCopy(origin, lastPos);
+ADDRGP4 $200
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 414
+;413:
+;414:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 416
+;415:
+;416:	re->reType = RT_SPRITE;
+ADDRLP4 4
+INDIRP4
+CNSTI4 2
+ASGNI4
+line 417
+;417:	re->radius = 16;
+ADDRLP4 4
+INDIRP4
+CNSTI4 132
+ADDP4
+CNSTF4 1098907648
+ASGNF4
+line 419
+;418:
+;419:	VectorClear(angles);
+ADDRLP4 8
+CNSTF4 0
+ASGNF4
+ADDRLP4 8+4
+CNSTF4 0
+ASGNF4
+ADDRLP4 8+8
+CNSTF4 0
+ASGNF4
+line 420
+;420:	AnglesToAxis( angles, re->axis );
+ADDRLP4 8
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AnglesToAxis
+CALLV
+pop
+line 421
+;421:}
+LABELV $199
+endproc CG_ScorePlum 44 8
+export CG_MakeExplosion
+proc CG_MakeExplosion 64 8
+line 431
+;422:
+;423:
+;424:/*
+;425:====================
+;426:CG_MakeExplosion
+;427:====================
+;428:*/
+;429:localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir,
+;430:								qhandle_t hModel, qhandle_t shader,
+;431:								int msec, qboolean isSprite ) {
+line 437
+;432:	float			ang;
+;433:	localEntity_t	*ex;
+;434:	int				offset;
+;435:	vec3_t			tmpVec, newOrigin;
+;436:
+;437:	if ( msec <= 0 ) {
+ADDRFP4 16
+INDIRI4
+CNSTI4 0
+GTI4 $216
+line 438
+;438:		CG_Error( "CG_MakeExplosion: msec = %i", msec );
+ADDRGP4 $218
+ARGP4
+ADDRFP4 16
+INDIRI4
+ARGI4
+ADDRGP4 CG_Error
+CALLV
+pop
+line 439
+;439:	}
+LABELV $216
+line 442
+;440:
+;441:	// skew the time a bit so they aren't all in sync
+;442:	offset = rand() & 63;
+ADDRLP4 36
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 28
+ADDRLP4 36
+INDIRI4
+CNSTI4 63
+BANDI4
+ASGNI4
+line 444
+;443:
+;444:	ex = CG_AllocLocalEntity();
+ADDRLP4 40
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 40
+INDIRP4
+ASGNP4
+line 445
+;445:	if ( isSprite ) {
+ADDRFP4 20
+INDIRI4
+CNSTI4 0
+EQI4 $219
+line 446
+;446:		ex->leType = LE_SPRITE_EXPLOSION;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 2
+ASGNI4
+line 449
+;447:
+;448:		// randomly rotate sprite orientation
+;449:		ex->refEntity.rotation = rand() % 360;
+ADDRLP4 44
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 288
+ADDP4
+ADDRLP4 44
+INDIRI4
+CNSTI4 360
+MODI4
+CVIF4 4
+ASGNF4
+line 450
+;450:		VectorScale( dir, 16, tmpVec );
+ADDRLP4 48
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 16
+ADDRLP4 48
+INDIRP4
+INDIRF4
+CNSTF4 1098907648
+MULF4
+ASGNF4
+ADDRLP4 16+4
+ADDRLP4 48
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+CNSTF4 1098907648
+MULF4
+ASGNF4
+ADDRLP4 16+8
+ADDRFP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+CNSTF4 1098907648
+MULF4
+ASGNF4
+line 451
+;451:		VectorAdd( tmpVec, origin, newOrigin );
+ADDRLP4 52
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 16
+INDIRF4
+ADDRLP4 52
+INDIRP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4+4
+ADDRLP4 16+4
+INDIRF4
+ADDRLP4 52
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4+8
+ADDRLP4 16+8
+INDIRF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+line 452
+;452:	} else {
+ADDRGP4 $220
+JUMPV
+LABELV $219
+line 453
+;453:		ex->leType = LE_EXPLOSION;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 1
+ASGNI4
+line 454
+;454:		VectorCopy( origin, newOrigin );
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 457
+;455:
+;456:		// set axis with random rotate
+;457:		if ( !dir ) {
+ADDRFP4 4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $227
+line 458
+;458:			AxisClear( ex->refEntity.axis );
+ADDRLP4 0
+INDIRP4
+CNSTI4 180
+ADDP4
+ARGP4
+ADDRGP4 AxisClear
+CALLV
+pop
+line 459
+;459:		} else {
+ADDRGP4 $228
+JUMPV
+LABELV $227
+line 460
+;460:			ang = rand() % 360;
+ADDRLP4 44
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 32
+ADDRLP4 44
+INDIRI4
+CNSTI4 360
+MODI4
+CVIF4 4
+ASGNF4
+line 461
+;461:			VectorCopy( dir, ex->refEntity.axis[0] );
+ADDRLP4 0
+INDIRP4
+CNSTI4 180
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 462
+;462:			RotateAroundDirection( ex->refEntity.axis, ang );
+ADDRLP4 0
+INDIRP4
+CNSTI4 180
+ADDP4
+ARGP4
+ADDRLP4 32
+INDIRF4
+ARGF4
+ADDRGP4 RotateAroundDirection
+CALLV
+pop
+line 463
+;463:		}
+LABELV $228
+line 464
+;464:	}
+LABELV $220
+line 466
+;465:
+;466:	ex->startTime = cg.time - offset;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ADDRLP4 28
+INDIRI4
+SUBI4
+ASGNI4
+line 467
+;467:	ex->endTime = ex->startTime + msec;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+ADDRFP4 16
+INDIRI4
+ADDI4
+ASGNI4
+line 470
+;468:
+;469:	// bias the time so all shader effects start correctly
+;470:	if ( intShaderTime )
+ADDRGP4 intShaderTime
+INDIRI4
+CNSTI4 0
+EQI4 $230
+line 471
+;471:		ex->refEntity.u.intShaderTime = ex->startTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 280
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+ASGNI4
+ADDRGP4 $231
+JUMPV
+LABELV $230
+line 473
+;472:	else
+;473:		ex->refEntity.u.shaderTime = ex->startTime / 1000.0f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 280
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CVIF4 4
+CNSTF4 981668463
+MULF4
+ASGNF4
+LABELV $231
+line 475
+;474:
+;475:	ex->refEntity.hModel = hModel;
+ADDRLP4 0
+INDIRP4
+CNSTI4 160
+ADDP4
+ADDRFP4 8
+INDIRI4
+ASGNI4
+line 476
+;476:	ex->refEntity.customShader = shader;
+ADDRLP4 0
+INDIRP4
+CNSTI4 264
+ADDP4
+ADDRFP4 12
+INDIRI4
+ASGNI4
+line 479
+;477:
+;478:	// set origin
+;479:	VectorCopy( newOrigin, ex->refEntity.origin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ADDRLP4 4
+INDIRB
+ASGNB 12
+line 480
+;480:	VectorCopy( newOrigin, ex->refEntity.oldorigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 236
+ADDP4
+ADDRLP4 4
+INDIRB
+ASGNB 12
+line 482
+;481:
+;482:	ex->color[0] = ex->color[1] = ex->color[2] = 1.0;
+ADDRLP4 60
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 116
+ADDP4
+ADDRLP4 60
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDRLP4 60
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+ADDRLP4 60
+INDIRF4
+ASGNF4
+line 484
+;483:
+;484:	return ex;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $215
+endproc CG_MakeExplosion 64 8
+export CG_Bleed
+proc CG_Bleed 20 0
+line 495
+;485:}
+;486:
+;487:
+;488:/*
+;489:=================
+;490:CG_Bleed
+;491:
+;492:This is the spurt of blood when a character gets hit
+;493:=================
+;494:*/
+;495:void CG_Bleed( const vec3_t origin, int entityNum ) {
+line 498
+;496:	localEntity_t	*ex;
+;497:
+;498:	if ( !cg_blood.integer ) {
+ADDRGP4 cg_blood+12
+INDIRI4
+CNSTI4 0
+NEI4 $233
+line 499
+;499:		return;
+ADDRGP4 $232
+JUMPV
+LABELV $233
+line 502
+;500:	}
+;501:
+;502:	ex = CG_AllocLocalEntity();
+ADDRLP4 4
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 503
+;503:	ex->leType = LE_EXPLOSION;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 1
+ASGNI4
+line 505
+;504:
+;505:	ex->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 506
+;506:	ex->endTime = ex->startTime + 500;
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 500
+ADDI4
+ASGNI4
+line 508
+;507:	
+;508:	VectorCopy ( origin, ex->refEntity.origin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 509
+;509:	ex->refEntity.reType = RT_SPRITE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+CNSTI4 2
+ASGNI4
+line 510
+;510:	ex->refEntity.rotation = rand() % 360;
+ADDRLP4 12
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 288
+ADDP4
+ADDRLP4 12
+INDIRI4
+CNSTI4 360
+MODI4
+CVIF4 4
+ASGNF4
+line 511
+;511:	ex->refEntity.radius = 24;
+ADDRLP4 0
+INDIRP4
+CNSTI4 284
+ADDP4
+CNSTF4 1103101952
+ASGNF4
+line 513
+;512:
+;513:	ex->refEntity.customShader = cgs.media.bloodExplosionShader;
+ADDRLP4 0
+INDIRP4
+CNSTI4 264
+ADDP4
+ADDRGP4 cgs+148692+512
+INDIRI4
+ASGNI4
+line 516
+;514:
+;515:	// don't show player's own blood in view
+;516:	if ( entityNum == cg.snap->ps.clientNum ) {
+ADDRFP4 4
+INDIRI4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+NEI4 $239
+line 517
+;517:		ex->refEntity.renderfx |= RF_THIRD_PERSON;
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 156
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRI4
+CNSTI4 2
+BORI4
+ASGNI4
+line 518
+;518:	}
+LABELV $239
+line 519
+;519:}
+LABELV $232
+endproc CG_Bleed 20 0
+proc CG_LaunchGib 20 8
+line 528
+;520:
+;521:
+;522:
+;523:/*
+;524:==================
+;525:CG_LaunchGib
+;526:==================
+;527:*/
+;528:static void CG_LaunchGib( const vec3_t origin, const vec3_t velocity, qhandle_t hModel ) {
+line 532
+;529:	localEntity_t	*le;
+;530:	refEntity_t		*re;
+;531:
+;532:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 533
+;533:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 535
+;534:
+;535:	le->leType = LE_FRAGMENT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 3
+ASGNI4
+line 536
+;536:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 537
+;537:	le->endTime = le->startTime + 5000 + random() * 3000;
+ADDRLP4 12
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 5000
+ADDI4
+CVIF4 4
+ADDRLP4 12
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 1035698551
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+line 539
+;538:
+;539:	VectorCopy( origin, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 540
+;540:	AxisCopy( axisDefault, re->axis );
+ADDRGP4 axisDefault
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AxisCopy
+CALLV
+pop
+line 541
+;541:	re->hModel = hModel;
+ADDRLP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRFP4 8
+INDIRI4
+ASGNI4
+line 543
+;542:
+;543:	le->pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 32
+ADDP4
+CNSTI4 5
+ASGNI4
+line 544
+;544:	VectorCopy( origin, le->pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 545
+;545:	VectorCopy( velocity, le->pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 56
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 546
+;546:	le->pos.trTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 548
+;547:
+;548:	le->bounceFactor = 0.6f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+CNSTF4 1058642330
+ASGNF4
+line 550
+;549:
+;550:	le->leBounceSoundType = LEBS_BLOOD;
+ADDRLP4 0
+INDIRP4
+CNSTI4 148
+ADDP4
+CNSTI4 1
+ASGNI4
+line 551
+;551:	le->leMarkType = LEMT_BLOOD;
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+CNSTI4 2
+ASGNI4
+line 552
+;552:}
+LABELV $242
+endproc CG_LaunchGib 20 8
+export CG_GibPlayer
+proc CG_GibPlayer 148 12
+line 563
+;553:
+;554:/*
+;555:===================
+;556:CG_GibPlayer
+;557:
+;558:Generated a bunch of gibs launching out from the bodies location
+;559:===================
+;560:*/
+;561:#define	GIB_VELOCITY	250
+;562:#define	GIB_JUMP		250
+;563:void CG_GibPlayer( const vec3_t playerOrigin ) {
+line 566
+;564:	vec3_t	origin, velocity;
+;565:
+;566:	if ( !cg_blood.integer ) {
+ADDRGP4 cg_blood+12
+INDIRI4
+CNSTI4 0
+NEI4 $246
+line 567
+;567:		return;
+ADDRGP4 $245
+JUMPV
+LABELV $246
+line 570
+;568:	}
+;569:
+;570:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 571
+;571:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 24
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 24
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 572
+;572:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 28
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 28
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 573
+;573:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 32
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 32
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 574
+;574:	if ( rand() & 1 ) {
+ADDRLP4 36
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 1
+BANDI4
+CNSTI4 0
+EQI4 $251
+line 575
+;575:		CG_LaunchGib( origin, velocity, cgs.media.gibSkull );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+200
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 576
+;576:	} else {
+ADDRGP4 $252
+JUMPV
+LABELV $251
+line 577
+;577:		CG_LaunchGib( origin, velocity, cgs.media.gibBrain );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+204
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 578
+;578:	}
+LABELV $252
+line 581
+;579:
+;580:	// allow gibs to be turned off for speed
+;581:	if ( !cg_gibs.integer ) {
+ADDRGP4 cg_gibs+12
+INDIRI4
+CNSTI4 0
+NEI4 $257
+line 582
+;582:		return;
+ADDRGP4 $245
+JUMPV
+LABELV $257
+line 585
+;583:	}
+;584:
+;585:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 586
+;586:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 40
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 40
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 587
+;587:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 44
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 44
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 588
+;588:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 48
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 48
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 589
+;589:	CG_LaunchGib( origin, velocity, cgs.media.gibAbdomen );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+168
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 591
+;590:
+;591:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 592
+;592:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 52
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 52
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 593
+;593:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 56
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 56
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 594
+;594:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 60
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 60
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 595
+;595:	CG_LaunchGib( origin, velocity, cgs.media.gibArm );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+172
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 597
+;596:
+;597:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 598
+;598:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 64
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 64
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 599
+;599:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 68
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 68
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 600
+;600:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 72
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 72
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 601
+;601:	CG_LaunchGib( origin, velocity, cgs.media.gibChest );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+176
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 603
+;602:
+;603:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 604
+;604:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 76
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 76
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 605
+;605:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 80
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 80
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 606
+;606:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 84
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 84
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 607
+;607:	CG_LaunchGib( origin, velocity, cgs.media.gibFist );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+180
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 609
+;608:
+;609:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 610
+;610:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 88
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 88
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 611
+;611:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 92
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 92
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 612
+;612:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 96
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 96
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 613
+;613:	CG_LaunchGib( origin, velocity, cgs.media.gibFoot );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+184
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 615
+;614:
+;615:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 616
+;616:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 100
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 100
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 617
+;617:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 104
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 104
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 618
+;618:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 108
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 108
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 619
+;619:	CG_LaunchGib( origin, velocity, cgs.media.gibForearm );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+188
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 621
+;620:
+;621:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 622
+;622:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 112
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 112
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 623
+;623:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 116
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 116
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 624
+;624:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 120
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 120
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 625
+;625:	CG_LaunchGib( origin, velocity, cgs.media.gibIntestine );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+192
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 627
+;626:
+;627:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 628
+;628:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 124
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 124
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 629
+;629:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 128
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 128
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 630
+;630:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 132
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 132
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 631
+;631:	CG_LaunchGib( origin, velocity, cgs.media.gibLeg );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+196
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 633
+;632:
+;633:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 634
+;634:	velocity[0] = crandom()*GIB_VELOCITY;
+ADDRLP4 136
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 136
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 635
+;635:	velocity[1] = crandom()*GIB_VELOCITY;
+ADDRLP4 140
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 140
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 636
+;636:	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+ADDRLP4 144
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 144
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+CNSTF4 1132068864
+ADDF4
+ASGNF4
+line 637
+;637:	CG_LaunchGib( origin, velocity, cgs.media.gibLeg );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+196
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchGib
+CALLV
+pop
+line 638
+;638:}
+LABELV $245
+endproc CG_GibPlayer 148 12
+export CG_LaunchExplode
+proc CG_LaunchExplode 20 8
+line 645
+;639:
+;640:/*
+;641:==================
+;642:CG_LaunchExplode
+;643:==================
+;644:*/
+;645:void CG_LaunchExplode( vec3_t origin, vec3_t velocity, qhandle_t hModel ) {
+line 649
+;646:	localEntity_t	*le;
+;647:	refEntity_t		*re;
+;648:
+;649:	le = CG_AllocLocalEntity();
+ADDRLP4 8
+ADDRGP4 CG_AllocLocalEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 650
+;650:	re = &le->refEntity;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ASGNP4
+line 652
+;651:
+;652:	le->leType = LE_FRAGMENT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 3
+ASGNI4
+line 653
+;653:	le->startTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 654
+;654:	le->endTime = le->startTime + 10000 + random() * 6000;
+ADDRLP4 12
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 10000
+ADDI4
+CVIF4 4
+ADDRLP4 12
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 1044087159
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+line 656
+;655:
+;656:	VectorCopy( origin, re->origin );
+ADDRLP4 4
+INDIRP4
+CNSTI4 68
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 657
+;657:	AxisCopy( axisDefault, re->axis );
+ADDRGP4 axisDefault
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+ARGP4
+ADDRGP4 AxisCopy
+CALLV
+pop
+line 658
+;658:	re->hModel = hModel;
+ADDRLP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRFP4 8
+INDIRI4
+ASGNI4
+line 660
+;659:
+;660:	le->pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 32
+ADDP4
+CNSTI4 5
+ASGNI4
+line 661
+;661:	VectorCopy( origin, le->pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 662
+;662:	VectorCopy( velocity, le->pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 56
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 663
+;663:	le->pos.trTime = cg.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 665
+;664:
+;665:	le->bounceFactor = 0.1f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+CNSTF4 1036831949
+ASGNF4
+line 667
+;666:
+;667:	le->leBounceSoundType = LEBS_BRASS;
+ADDRLP4 0
+INDIRP4
+CNSTI4 148
+ADDP4
+CNSTI4 2
+ASGNI4
+line 668
+;668:	le->leMarkType = LEMT_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+CNSTI4 0
+ASGNI4
+line 669
+;669:}
+LABELV $296
+endproc CG_LaunchExplode 20 8
+export CG_BigExplode
+proc CG_BigExplode 84 12
+line 680
+;670:
+;671:#define	EXP_VELOCITY	100
+;672:#define	EXP_JUMP		150
+;673:/*
+;674:===================
+;675:CG_BigExplode
+;676:
+;677:Generated a bunch of gibs launching out from the bodies location
+;678:===================
+;679:*/
+;680:void CG_BigExplode( vec3_t playerOrigin ) {
+line 683
+;681:	vec3_t	origin, velocity;
+;682:
+;683:	if ( !cg_blood.integer ) {
+ADDRGP4 cg_blood+12
+INDIRI4
+CNSTI4 0
+NEI4 $300
+line 684
+;684:		return;
+ADDRGP4 $299
+JUMPV
+LABELV $300
+line 687
+;685:	}
+;686:
+;687:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 688
+;688:	velocity[0] = crandom()*EXP_VELOCITY;
+ADDRLP4 24
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 24
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+ASGNF4
+line 689
+;689:	velocity[1] = crandom()*EXP_VELOCITY;
+ADDRLP4 28
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 28
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+ASGNF4
+line 690
+;690:	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
+ADDRLP4 32
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 32
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+CNSTF4 1125515264
+ADDF4
+ASGNF4
+line 691
+;691:	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+208
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchExplode
+CALLV
+pop
+line 693
+;692:
+;693:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 694
+;694:	velocity[0] = crandom()*EXP_VELOCITY;
+ADDRLP4 36
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 36
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+ASGNF4
+line 695
+;695:	velocity[1] = crandom()*EXP_VELOCITY;
+ADDRLP4 40
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 40
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+ASGNF4
+line 696
+;696:	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
+ADDRLP4 44
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 44
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+CNSTF4 1125515264
+ADDF4
+ASGNF4
+line 697
+;697:	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+208
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchExplode
+CALLV
+pop
+line 699
+;698:
+;699:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 700
+;700:	velocity[0] = crandom()*EXP_VELOCITY*1.5;
+ADDRLP4 48
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 48
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1133903872
+MULF4
+ASGNF4
+line 701
+;701:	velocity[1] = crandom()*EXP_VELOCITY*1.5;
+ADDRLP4 52
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 52
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1133903872
+MULF4
+ASGNF4
+line 702
+;702:	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
+ADDRLP4 56
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 56
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+CNSTF4 1125515264
+ADDF4
+ASGNF4
+line 703
+;703:	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+208
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchExplode
+CALLV
+pop
+line 705
+;704:
+;705:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 706
+;706:	velocity[0] = crandom()*EXP_VELOCITY*2.0;
+ADDRLP4 60
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 60
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1137180672
+MULF4
+ASGNF4
+line 707
+;707:	velocity[1] = crandom()*EXP_VELOCITY*2.0;
+ADDRLP4 64
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 64
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1137180672
+MULF4
+ASGNF4
+line 708
+;708:	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
+ADDRLP4 68
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 68
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+CNSTF4 1125515264
+ADDF4
+ASGNF4
+line 709
+;709:	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+208
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchExplode
+CALLV
+pop
+line 711
+;710:
+;711:	VectorCopy( playerOrigin, origin );
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+INDIRB
+ASGNB 12
+line 712
+;712:	velocity[0] = crandom()*EXP_VELOCITY*2.5;
+ADDRLP4 72
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 72
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 713
+;713:	velocity[1] = crandom()*EXP_VELOCITY*2.5;
+ADDRLP4 76
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 76
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1140457472
+MULF4
+ASGNF4
+line 714
+;714:	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
+ADDRLP4 80
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 80
+INDIRI4
+CNSTI4 32767
+BANDI4
+CVIF4 4
+CNSTF4 939524352
+MULF4
+CNSTF4 1056964608
+SUBF4
+CNSTF4 1128792064
+MULF4
+CNSTF4 1125515264
+ADDF4
+ASGNF4
+line 715
+;715:	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 cgs+148692+208
+INDIRI4
+ARGI4
+ADDRGP4 CG_LaunchExplode
+CALLV
+pop
+line 716
+;716:}
+LABELV $299
+endproc CG_BigExplode 84 12
+import trap_R_AddLinearLightToScene
+import trap_R_AddRefEntityToScene2
+import linearLight
+import intShaderTime
+import CG_NewParticleArea
+import initparticles
+import CG_ParticleExplosion
+import CG_ParticleMisc
+import CG_ParticleDust
+import CG_ParticleSparks
+import CG_ParticleBulletDebris
+import CG_ParticleSnowFlurry
+import CG_AddParticleShrapnel
+import CG_ParticleSmoke
+import CG_ParticleSnow
+import CG_AddParticles
+import CG_ClearParticles
+import trap_GetEntityToken
+import trap_getCameraInfo
+import trap_startCamera
+import trap_loadCamera
+import trap_SnapVector
+import trap_CIN_SetExtents
+import trap_CIN_DrawCinematic
+import trap_CIN_RunCinematic
+import trap_CIN_StopCinematic
+import trap_CIN_PlayCinematic
+import trap_Key_GetKey
+import trap_Key_SetCatcher
+import trap_Key_GetCatcher
+import trap_Key_IsDown
+import trap_R_RegisterFont
+import trap_MemoryRemaining
+import testPrintFloat
+import testPrintInt
+import trap_SetUserCmdValue
+import trap_GetUserCmd
+import trap_GetCurrentCmdNumber
+import trap_GetServerCommand
+import trap_GetSnapshot
+import trap_GetCurrentSnapshotNumber
+import trap_GetGameState
+import trap_GetGlconfig
+import trap_R_inPVS
+import trap_R_RemapShader
+import trap_R_LerpTag
+import trap_R_ModelBounds
+import trap_R_DrawStretchPic
+import trap_R_SetColor
+import trap_R_RenderScene
+import trap_R_LightForPoint
+import trap_R_AddAdditiveLightToScene
+import trap_R_AddLightToScene
+import trap_R_AddPolysToScene
+import trap_R_AddPolyToScene
+import trap_R_AddRefEntityToScene
+import trap_R_ClearScene
+import trap_R_RegisterShaderNoMip
+import trap_R_RegisterShader
+import trap_R_RegisterSkin
+import trap_R_RegisterModel
+import trap_R_LoadWorldMap
+import trap_S_StopBackgroundTrack
+import trap_S_StartBackgroundTrack
+import trap_S_RegisterSound
+import trap_S_Respatialize
+import trap_S_UpdateEntityPosition
+import trap_S_AddRealLoopingSound
+import trap_S_AddLoopingSound
+import trap_S_ClearLoopingSounds
+import trap_S_StartLocalSound
+import trap_S_StopLoopingSound
+import trap_S_StartSound
+import trap_CM_MarkFragments
+import trap_CM_TransformedCapsuleTrace
+import trap_CM_TransformedBoxTrace
+import trap_CM_CapsuleTrace
+import trap_CM_BoxTrace
+import trap_CM_TransformedPointContents
+import trap_CM_PointContents
+import trap_CM_TempBoxModel
+import trap_CM_InlineModel
+import trap_CM_NumInlineModels
+import trap_CM_LoadMap
+import trap_UpdateScreen
+import trap_SendClientCommand
+import trap_RemoveCommand
+import trap_AddCommand
+import trap_RealTime
+import trap_SendConsoleCommand
+import trap_FS_Seek
+import trap_FS_FCloseFile
+import trap_FS_Write
+import trap_FS_Read
+import trap_FS_FOpenFile
+import trap_Args
+import trap_Argv
+import trap_Argc
+import trap_Cvar_VariableStringBuffer
+import trap_Cvar_Set
+import trap_Cvar_Update
+import trap_Cvar_Register
+import trap_Milliseconds
+import trap_Error
+import trap_Print
+import CG_CheckChangedPredictableEvents
+import CG_TransitionPlayerState
+import CG_Respawn
+import CG_ShaderStateChanged
+import CG_SetConfigValues
+import CG_ParseSysteminfo
+import CG_ParseServerinfo
+import CG_ExecuteNewServerCommands
+import CG_InitConsoleCommands
+import CG_ConsoleCommand
+import CG_ScoreboardClick
+import CG_DrawOldTourneyScoreboard
+import CG_DrawOldScoreboard
+import CG_DrawInformation
+import CG_LoadingClient
+import CG_LoadingItem
+import CG_LoadingString
+import CG_ProcessSnapshots
+import CG_AddLocalEntities
+import CG_AllocLocalEntity
+import CG_InitLocalEntities
+import CG_ImpactMark
+import CG_AddMarks
+import CG_InitMarkPolys
+import CG_OutOfAmmoChange
+import CG_DrawWeaponSelect
+import CG_AddPlayerWeapon
+import CG_AddViewWeapon
+import CG_GrappleTrail
+import CG_RailTrail
+import CG_Bullet
+import CG_ShotgunFire
+import CG_MissileHitPlayer
+import CG_MissileHitWall
+import CG_FireWeapon
+import CG_RegisterItemVisuals
+import CG_RegisterWeapon
+import CG_Weapon_f
+import CG_PrevWeapon_f
+import CG_NextWeapon_f
+import CG_PositionRotatedEntityOnTag
+import CG_PositionEntityOnTag
+import CG_AdjustPositionForMover
+import CG_Beam
+import CG_AddPacketEntities
+import CG_SetEntitySoundPosition
+import CG_PainEvent
+import CG_EntityEvent
+import CG_PlaceString
+import CG_CheckEvents
+import CG_PlayDroppedEvents
+import CG_LoadDeferredPlayers
+import CG_PredictPlayerState
+import CG_Trace
+import CG_PointContents
+import CG_BuildSolidList
+import CG_CustomSound
+import CG_NewClientInfo
+import CG_AddRefEntityWithPowerups
+import CG_ResetPlayerEntity
+import CG_Player
+import CG_TrackClientTeamChange
+import CG_ForceModelChange
+import CG_StatusHandle
+import CG_OtherTeamHasFlag
+import CG_YourTeamHasFlag
+import CG_GameTypeString
+import CG_CheckOrderPending
+import CG_Text_PaintChar
+import CG_Draw3DModel
+import CG_GetKillerText
+import CG_GetGameStatusText
+import CG_GetTeamColor
+import CG_InitTeamChat
+import CG_SetPrintString
+import CG_ShowResponseHead
+import CG_RunMenuScript
+import CG_OwnerDrawVisible
+import CG_GetValue
+import CG_SelectNextPlayer
+import CG_SelectPrevPlayer
+import CG_Text_Height
+import CG_Text_Width
+import CG_Text_Paint
+import CG_OwnerDraw
+import CG_DrawTeamBackground
+import CG_DrawFlagModel
+import CG_DrawActive
+import CG_DrawHead
+import CG_CenterPrint
+import CG_AddLagometerSnapshotInfo
+import CG_AddLagometerFrameInfo
+import teamChat2
+import teamChat1
+import systemChat
+import drawTeamOverlayModificationCount
+import numSortedTeamPlayers
+import sortedTeamPlayers
+import CG_SelectFont
+import CG_LoadFonts
+import CG_DrawString
+import CG_DrawTopBottom
+import CG_DrawSides
+import CG_DrawRect
+import UI_DrawProportionalString
+import CG_GetColorForHealth
+import CG_ColorForHealth
+import CG_TileClear
+import CG_TeamColor
+import CG_FadeColorTime
+import CG_FadeColor
+import CG_DrawStrlen
+import CG_DrawStringExt
+import CG_DrawPic
+import CG_FillScreen
+import CG_FillRect
+import CG_AdjustFrom640
+import CG_DrawActiveFrame
+import CG_AddBufferedSound
+import CG_ZoomUp_f
+import CG_ZoomDown_f
+import CG_TestModelPrevSkin_f
+import CG_TestModelNextSkin_f
+import CG_TestModelPrevFrame_f
+import CG_TestModelNextFrame_f
+import CG_TestGun_f
+import CG_TestModel_f
+import CG_SetScoreCatcher
+import CG_BuildSpectatorString
+import CG_MouseEvent
+import CG_KeyEvent
+import CG_LastAttacker
+import CG_CrosshairPlayer
+import CG_UpdateCvars
+import CG_StartMusic
+import CG_Error
+import CG_Printf
+import CG_Argv
+import CG_ConfigString
+import eventnames
+import cg_followKiller
+import cg_fovAdjust
+import cg_deadBodyDarken
+import cg_teamColors
+import cg_teamModel
+import cg_enemyColors
+import cg_enemyModel
+import cg_hitSounds
+import cg_obeliskRespawnDelay
+import cg_recordSPDemoName
+import cg_recordSPDemo
+import cg_singlePlayerActive
+import cg_enableBreath
+import cg_enableDust
+import cg_singlePlayer
+import cg_blueTeamName
+import cg_redTeamName
+import cg_trueLightning
+import cg_oldPlasma
+import cg_oldRocket
+import cg_oldRail
+import cg_noProjectileTrail
+import cg_noTaunt
+import cg_bigFont
+import cg_smallFont
+import cg_cameraMode
+import cg_timescale
+import cg_timescaleFadeSpeed
+import cg_timescaleFadeEnd
+import cg_cameraOrbitDelay
+import cg_cameraOrbit
+import cg_smoothClients
+import cg_scorePlum
+import cg_teamChatsOnly
+import cg_drawFriend
+import cg_deferPlayers
+import cg_predictItems
+import cg_blood
+import cg_paused
+import cg_buildScript
+import cg_forceModel
+import cg_stats
+import cg_teamChatHeight
+import cg_teamChatTime
+import cg_drawSpeed
+import cg_drawAttacker
+import cg_lagometer
+import cg_thirdPerson
+import cg_thirdPersonAngle
+import cg_thirdPersonRange
+import cg_zoomFov
+import cg_fov
+import cg_simpleItems
+import cg_ignore
+import cg_autoswitch
+import cg_tracerLength
+import cg_tracerWidth
+import cg_tracerChance
+import cg_viewsize
+import cg_drawGun
+import cg_gun_z
+import cg_gun_y
+import cg_gun_x
+import cg_gun_frame
+import cg_brassTime
+import cg_addMarks
+import cg_footsteps
+import cg_showmiss
+import cg_noPlayerAnims
+import cg_nopredict
+import cg_errorDecay
+import cg_railTrailRadius
+import cg_railTrailTime
+import cg_debugEvents
+import cg_debugPosition
+import cg_debugAnim
+import cg_animSpeed
+import cg_draw2D
+import cg_drawStatus
+import cg_crosshairHealth
+import cg_crosshairSize
+import cg_crosshairY
+import cg_crosshairX
+import cg_drawWeaponSelect
+import cg_teamOverlayUserinfo
+import cg_drawTeamOverlay
+import cg_drawRewards
+import cg_drawCrosshairNames
+import cg_drawCrosshair
+import cg_drawAmmoWarning
+import cg_drawIcons
+import cg_draw3dIcons
+import cg_drawSnapshot
+import cg_drawFPS
+import cg_drawTimer
+import cg_gibs
+import cg_shadows
+import cg_swingSpeed
+import cg_bobroll
+import cg_bobpitch
+import cg_bobup
+import cg_runroll
+import cg_runpitch
+import cg_centertime
+import cg_markPolys
+import cg_items
+import cg_weapons
+import cg_entities
+import cg
+import cgs
+import BigEndian
+import replace1
+import Q_stradd
+import Q_strcpy
+import BG_StripColor
+import BG_CleanName
+import DecodedString
+import EncodedString
+import strtok
+import Q_stristr
+import BG_sprintf
+import BG_PlayerTouchesItem
+import BG_PlayerStateToEntityStateExtraPolate
+import BG_PlayerStateToEntityState
+import BG_TouchJumpPad
+import BG_AddPredictableEventToPlayerstate
+import BG_EvaluateTrajectoryDelta
+import BG_EvaluateTrajectory
+import BG_CanItemBeGrabbed
+import BG_FindItemForHoldable
+import BG_FindItemForPowerup
+import BG_FindItemForWeapon
+import BG_FindItem
+import bg_numItems
+import bg_itemlist
+import Pmove
+import PM_UpdateViewAngles
+import gt
+import Com_Printf
+import Com_Error
+import Info_NextPair
+import Info_ValidateKeyValue
+import Info_Validate
+import Info_SetValueForKey_Big
+import Info_SetValueForKey
+import Info_ValueForKey
+import va
+import Q_CleanStr
+import Q_PrintStrlen
+import Q_strcat
+import Q_strncpyz
+import Q_strrchr
+import Q_strupr
+import Q_strlwr
+import Q_stricmpn
+import Q_strncmp
+import Q_stricmp
+import Q_isalpha
+import Q_isupper
+import Q_islower
+import Q_isprint
+import locase
+import Com_sprintf
+import Parse3DMatrix
+import Parse2DMatrix
+import Parse1DMatrix
+import SkipRestOfLine
+import SkipBracedSection
+import COM_MatchToken
+import Com_Split
+import COM_ParseSep
+import Com_InitSeparators
+import SkipTillSeparators
+import COM_ParseWarning
+import COM_ParseError
+import COM_Compress
+import COM_ParseExt
+import COM_Parse
+import COM_GetCurrentParseLine
+import COM_BeginParseSession
+import COM_DefaultExtension
+import COM_StripExtension
+import COM_SkipPath
+import Com_Clamp
+import PerpendicularVector
+import AngleVectors
+import MatrixMultiply
+import MakeNormalVectors
+import RotateAroundDirection
+import RotatePointAroundVector
+import ProjectPointOnPlane
+import PlaneFromPoints
+import AngleDelta
+import AngleNormalize180
+import AngleNormalize360
+import AnglesSubtract
+import AngleSubtract
+import LerpAngle
+import AngleMod
+import BoxOnPlaneSide
+import SetPlaneSignbits
+import AxisCopy
+import AxisClear
+import AnglesToAxis
+import vectoangles
+import Q_crandom
+import Q_random
+import Q_rand
+import Q_acos
+import Q_log2
+import VectorRotate
+import Vector4Scale
+import VectorNormalize2
+import VectorNormalize
+import CrossProduct
+import VectorInverse
+import VectorNormalizeFast
+import DistanceSquared
+import Distance
+import VectorLengthSquared
+import VectorLength
+import VectorCompare
+import AddPointToBounds
+import ClearBounds
+import RadiusFromBounds
+import NormalizeColor
+import ColorBytes4
+import ColorBytes3
+import _VectorMA
+import _VectorScale
+import _VectorCopy
+import _VectorAdd
+import _VectorSubtract
+import _DotProduct
+import ByteToDir
+import DirToByte
+import ClampShort
+import ClampChar
+import Q_rsqrt
+import Q_fabs
+import axisDefault
+import vec3_origin
+import g_color_table
+import colorDkGrey
+import colorMdGrey
+import colorLtGrey
+import colorWhite
+import colorCyan
+import colorMagenta
+import colorYellow
+import colorBlue
+import colorGreen
+import colorRed
+import colorBlack
+import bytedirs
+import Hunk_Alloc
+import acos
+import fabs
+import abs
+import tan
+import atan2
+import cos
+import sin
+import sqrt
+import floor
+import ceil
+import memcpy
+import memset
+import memmove
+import Q_sscanf
+import ED_vsprintf
+import atoi
+import atof
+import toupper
+import tolower
+import strncpy
+import strstr
+import strchr
+import strcmp
+import strcpy
+import strcat
+import strlen
+import rand
+import srand
+import qsort
+lit
+align 1
+LABELV $218
+byte 1 67
+byte 1 71
+byte 1 95
+byte 1 77
+byte 1 97
+byte 1 107
+byte 1 101
+byte 1 69
+byte 1 120
+byte 1 112
+byte 1 108
+byte 1 111
+byte 1 115
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 58
+byte 1 32
+byte 1 109
+byte 1 115
+byte 1 101
+byte 1 99
+byte 1 32
+byte 1 61
+byte 1 32
+byte 1 37
+byte 1 105
+byte 1 0

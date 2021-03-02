@@ -70,7 +70,7 @@ TeamMain_MenuInit
 */
 void TeamMain_MenuInit( void ) {
 	char	info[BIG_INFO_STRING]; // MAX_INFO_STRING
-	gametype_t gametype;
+	enumGametype gametype;
 	int		y;
 
 	memset( &s_teammain, 0, sizeof(s_teammain) );
@@ -139,15 +139,15 @@ void TeamMain_MenuInit( void ) {
 			      
 	// set initial states
 	switch( gametype ) {
-	case GT_SINGLE_PLAYER:
+	case GT_CAMPAIGN:
 	case GT_FFA:
-	case GT_TOURNAMENT:
+	case GT_DUEL:
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;
 		s_teammain.joinblue.generic.flags |= QMF_GRAYED;
 		break;
 
 	default:
-	case GT_TEAM:
+	case GT_TDM:
 	case GT_CTF:
 		s_teammain.joingame.generic.flags |= QMF_GRAYED;
 		break;

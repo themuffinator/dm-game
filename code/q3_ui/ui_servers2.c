@@ -10,7 +10,7 @@ MULTIPLAYER MENU (SERVER BROWSER)
 
 
 #include "ui_local.h"
-#include "../game/q_shared.h"
+#include "../qcommon/q_shared.h"
 
 
 #define REFRESH_DELAY			10	  // in ms
@@ -463,13 +463,13 @@ static void ArenaServers_UpdateList( void )
 			break;
 
 		case GAMES_TEAMPLAY:
-			if( servernodeptr->gametype != GT_TEAM ) {
+			if( servernodeptr->gametype != GT_TDM ) {
 				continue;
 			}
 			break;
 
 		case GAMES_TOURNEY:
-			if( servernodeptr->gametype != GT_TOURNAMENT ) {
+			if( servernodeptr->gametype != GT_DUEL ) {
 				continue;
 			}
 			break;

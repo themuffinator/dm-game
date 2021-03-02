@@ -36,6 +36,7 @@ ui_startserver
 ui_team
 ui_teamorders
 ui_video
+bg_gametypes
 bg_misc
 bg_lib
 q_math

@@ -77,7 +77,7 @@ static const char *gametype_items[] = {
 	NULL
 };
 
-static int gametype_remap[] = { GT_FFA, GT_TOURNAMENT, GT_TEAM, GT_CTF };
+static int gametype_remap[] = { GT_FFA, GT_DUEL, GT_TDM, GT_CTF };
 static int gametype_remap2[] = {0, 1, 0, 2, 3};
 
 // use ui_servers2.c definition
@@ -92,7 +92,7 @@ GametypeBits
 =================
 */
 static int GametypeBits( char *string ) {
-	int		bits;
+	int		bits, i;
 	char	*p;
 	char	*token;
 
@@ -103,30 +103,11 @@ static int GametypeBits( char *string ) {
 		if( token[0] == 0 ) {
 			break;
 		}
-
-		if( Q_stricmp( token, "ffa" ) == 0 ) {
-			bits |= 1 << GT_FFA;
-			continue;
-		}
-
-		if( Q_stricmp( token, "tourney" ) == 0 ) {
-			bits |= 1 << GT_TOURNAMENT;
-			continue;
-		}
-
-		if( Q_stricmp( token, "single" ) == 0 ) {
-			bits |= 1 << GT_SINGLE_PLAYER;
-			continue;
-		}
-
-		if( Q_stricmp( token, "team" ) == 0 ) {
-			bits |= 1 << GT_TEAM;
-			continue;
-		}
-
-		if( Q_stricmp( token, "ctf" ) == 0 ) {
-			bits |= 1 << GT_CTF;
-			continue;
+		for ( i = 0; i < GT_MAX_GAME_TYPE; i++ ) {
+			if ( Q_stricmp( token, gt[i].gtArenaRef ) == 0 ) {
+				bits |= 1 << gt[i].index;
+				continue;
+			}
 		}
 	}
 
@@ -241,7 +222,7 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 	s_startserver.nummaps = 0;
 	matchbits = 1 << gametype_remap[s_startserver.gametype.curvalue];
 	if( gametype_remap[s_startserver.gametype.curvalue] == GT_FFA ) {
-		matchbits |= ( 1 << GT_SINGLE_PLAYER );
+		matchbits |= ( 1 << GT_CAMPAIGN );
 	}
 	for( i = 0; i < count; i++ ) {
 		info = UI_GetArenaInfoByNumber( i );
@@ -682,7 +663,7 @@ static qboolean BotAlreadySelected( const char *checkName ) {
 		if( s_serveroptions.playerType[n].curvalue != 1 ) {
 			continue;
 		}
-		if( (s_serveroptions.gametype >= GT_TEAM) &&
+		if( (s_serveroptions.gametype >= GT_TDM) &&
 			(s_serveroptions.playerTeam[n].curvalue != s_serveroptions.playerTeam[s_serveroptions.newBotIndex].curvalue ) ) {
 			continue;
 		}
@@ -739,12 +720,12 @@ static void ServerOptions_Start( void ) {
 		trap_Cvar_SetValue( "ui_ffa_timelimit", timelimit );
 		break;
 
-	case GT_TOURNAMENT:
+	case GT_DUEL:
 		trap_Cvar_SetValue( "ui_tourney_fraglimit", fraglimit );
 		trap_Cvar_SetValue( "ui_tourney_timelimit", timelimit );
 		break;
 
-	case GT_TEAM:
+	case GT_TDM:
 		trap_Cvar_SetValue( "ui_team_fraglimit", fraglimit );
 		trap_Cvar_SetValue( "ui_team_timelimit", timelimit );
 		trap_Cvar_SetValue( "ui_team_friendly", friendlyfire );
@@ -784,7 +765,7 @@ static void ServerOptions_Start( void ) {
 		if( s_serveroptions.playerNameBuffers[n][0] == '-' ) {
 			continue;
 		}
-		if( s_serveroptions.gametype >= GT_TEAM ) {
+		if( s_serveroptions.gametype >= GT_TDM ) {
 			Com_sprintf( buf, sizeof(buf), "addbot %s %i %s\n", s_serveroptions.playerNameBuffers[n], skill,
 				playerTeam_list[s_serveroptions.playerTeam[n].curvalue] );
 		}
@@ -795,7 +776,7 @@ static void ServerOptions_Start( void ) {
 	}
 
 	// set player's team
-	if( dedicated == 0 && s_serveroptions.gametype >= GT_TEAM ) {
+	if( dedicated == 0 && s_serveroptions.gametype >= GT_TDM ) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, va( "team %s\n", playerTeam_list[s_serveroptions.playerTeam[0].curvalue] ) );
 	}
 }
@@ -822,7 +803,7 @@ static void ServerOptions_InitPlayerItems( void ) {
 		s_serveroptions.playerType[n].curvalue = v;
 	}
 
-	if( s_serveroptions.multiplayer && (s_serveroptions.gametype < GT_TEAM) ) {
+	if( s_serveroptions.multiplayer && (s_serveroptions.gametype < GT_TDM) ) {
 		for( n = 8; n < PLAYER_SLOTS; n++ ) {
 			s_serveroptions.playerType[n].curvalue = 2;
 		}
@@ -838,7 +819,7 @@ static void ServerOptions_InitPlayerItems( void ) {
 	}
 
 	// init teams
-	if( s_serveroptions.gametype >= GT_TEAM ) {
+	if( s_serveroptions.gametype >= GT_TDM ) {
 		for( n = 0; n < (PLAYER_SLOTS / 2); n++ ) {
 			s_serveroptions.playerTeam[n].curvalue = 0;
 		}
@@ -891,7 +872,7 @@ static void ServerOptions_SetPlayerItems( void ) {
 	}
 
 	// teams
-	if( s_serveroptions.gametype < GT_TEAM ) {
+	if( s_serveroptions.gametype < GT_TDM ) {
 		return;
 	}
 	for( n = start; n < PLAYER_SLOTS; n++ ) {
@@ -1017,10 +998,10 @@ static void ServerOptions_InitBotNames( void ) {
 	char		*bot;
 	char		bots[MAX_INFO_STRING];
 
-	if( s_serveroptions.gametype >= GT_TEAM ) {
+	if( s_serveroptions.gametype >= GT_TDM ) {
 		Q_strncpyz( s_serveroptions.playerNameBuffers[1], "grunt", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[2], "major", 16 );
-		if( s_serveroptions.gametype == GT_TEAM ) {
+		if( s_serveroptions.gametype == GT_TDM ) {
 			Q_strncpyz( s_serveroptions.playerNameBuffers[3], "visor", 16 );
 		}
 		else {
@@ -1032,7 +1013,7 @@ static void ServerOptions_InitBotNames( void ) {
 		Q_strncpyz( s_serveroptions.playerNameBuffers[6], "sarge", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[7], "grunt", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[8], "major", 16 );
-		if( s_serveroptions.gametype == GT_TEAM ) {
+		if( s_serveroptions.gametype == GT_TDM ) {
 			Q_strncpyz( s_serveroptions.playerNameBuffers[9], "visor", 16 );
 		}
 		else {
@@ -1115,12 +1096,12 @@ static void ServerOptions_SetMenuItems( void ) {
 		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_ffa_timelimit" ) ) );
 		break;
 
-	case GT_TOURNAMENT:
+	case GT_DUEL:
 		Com_sprintf( s_serveroptions.fraglimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_tourney_fraglimit" ) ) );
 		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_tourney_timelimit" ) ) );
 		break;
 
-	case GT_TEAM:
+	case GT_TDM:
 		Com_sprintf( s_serveroptions.fraglimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_team_fraglimit" ) ) );
 		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_team_timelimit" ) ) );
 		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "ui_team_friendly" ) );
@@ -1280,7 +1261,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.timelimit.field.widthInChars = 3;
 	s_serveroptions.timelimit.field.maxchars     = 3;
 
-	if( s_serveroptions.gametype >= GT_TEAM ) {
+	if( s_serveroptions.gametype >= GT_TDM ) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.friendlyfire.generic.type     = MTYPE_RADIOBUTTON;
 		s_serveroptions.friendlyfire.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -1424,7 +1405,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.playerType[n] );
 		}
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.playerName[n] );
-		if( s_serveroptions.gametype >= GT_TEAM ) {
+		if( s_serveroptions.gametype >= GT_TDM ) {
 			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.playerTeam[n] );
 		}
 	}
@@ -1436,7 +1417,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.flaglimit );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.timelimit );
-	if( s_serveroptions.gametype >= GT_TEAM ) {
+	if( s_serveroptions.gametype >= GT_TDM ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );

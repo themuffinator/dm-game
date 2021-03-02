@@ -308,10 +308,8 @@ just like the existing corpse to leave behind.
 =============
 */
 void CopyToBodyQue( gentity_t *ent ) {
-#ifdef MISSIONPACK
 	gentity_t	*e;
 	int i;
-#endif
 	gentity_t		*body;
 	int			contents;
 
@@ -331,7 +329,6 @@ void CopyToBodyQue( gentity_t *ent ) {
 
 	body->s = ent->s;
 	body->s.eFlags = EF_DEAD;		// clear EF_TALK, etc
-#ifdef MISSIONPACK
 	if ( ent->s.eFlags & EF_KAMIKAZE ) {
 		body->s.eFlags |= EF_KAMIKAZE;
 
@@ -348,7 +345,6 @@ void CopyToBodyQue( gentity_t *ent ) {
 			break;
 		}
 	}
-#endif
 	body->s.powerups = 0;	// clear powerups
 	body->s.loopSound = 0;	// clear lava burning
 	body->s.number = body - g_entities;
@@ -642,7 +638,6 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	}
 
 	// set max health
-#ifdef MISSIONPACK
 	if (client->ps.powerups[PW_GUARD]) {
 		client->pers.maxHealth = HEALTH_SOFT_LIMIT*2;
 	} else {
@@ -652,17 +647,9 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 			client->pers.maxHealth = HEALTH_SOFT_LIMIT;
 		}
 	}
-#else
-	health = atoi( Info_ValueForKey( userinfo, "handicap" ) );
-	client->pers.maxHealth = health;
-	if ( client->pers.maxHealth < 1 || client->pers.maxHealth > HEALTH_SOFT_LIMIT ) {
-		client->pers.maxHealth = HEALTH_SOFT_LIMIT;
-	}
-#endif
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
-#ifdef MISSIONPACK
-	if (g_gametype.integer >= GT_TEAM) {
+	if ( GTx( g_gametype.integer, GTF_TEAMS ) ) {
 		client->pers.teamInfo = qtrue;
 	} else {
 		s = Info_ValueForKey( userinfo, "teamoverlay" );
@@ -672,15 +659,6 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 			client->pers.teamInfo = qfalse;
 		}
 	}
-#else
-	// teamInfo
-	s = Info_ValueForKey( userinfo, "teamoverlay" );
-	if ( ! *s || atoi( s ) != 0 ) {
-		client->pers.teamInfo = qtrue;
-	} else {
-		client->pers.teamInfo = qfalse;
-	}
-#endif
 
 	// set model
 	Q_strncpyz( model, Info_ValueForKey( userinfo, "model" ), sizeof( model ) );
@@ -924,7 +902,7 @@ void ClientBegin( int clientNum ) {
 
 		client->sess.spectatorTime = 0;
 
-		if ( g_gametype.integer != GT_TOURNAMENT && !client->pers.inGame ) {
+		if ( g_gametype.integer != GT_DUEL && !client->pers.inGame ) {
 			G_BroadcastServerCommand( -1, va("print \"%s" S_COLOR_WHITE " entered the game\n\"", client->pers.netname) );
 		}
 	}
@@ -975,7 +953,7 @@ void ClientSpawn(gentity_t *ent) {
 	// ranging doesn't count this client
 	if ( isSpectator ) {
 		spawnPoint = SelectSpectatorSpawnPoint( spawn_origin, spawn_angles );
-	} else if (g_gametype.integer >= GT_CTF ) {
+	} else if (GTx( g_gametype.integer, GTF_TEAMS | GTF_TEAMBASES ) ) {
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint( ent, client->sess.sessionTeam, client->pers.teamState.state, spawn_origin, spawn_angles );
 	} else {
@@ -1005,10 +983,8 @@ void ClientSpawn(gentity_t *ent) {
 	}
 	client->pers.teamState.state = TEAM_ACTIVE;
 
-#ifdef MISSIONPACK
 	// always clear the kamikaze flag
 	ent->s.eFlags &= ~EF_KAMIKAZE;
-#endif
 
 	// toggle the teleport bit so the client knows to not lerp
 	// and never clear the voted flag
@@ -1087,7 +1063,7 @@ void ClientSpawn(gentity_t *ent) {
 	client->ps.clientNum = index;
 
 	client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-	if ( g_gametype.integer == GT_TEAM ) {
+	if ( GTx( g_gametype.integer, GTF_TEAMS | GTF_TDM ) ) {
 		client->ps.ammo[WP_MACHINEGUN] = 50;
 	} else {
 		client->ps.ammo[WP_MACHINEGUN] = 100;
@@ -1209,12 +1185,10 @@ void ClientDisconnect( int clientNum ) {
 		// They don't get to take powerups with them!
 		// Especially important for stuff like CTF flags
 		TossClientItems( ent );
-#ifdef MISSIONPACK
 		TossClientPersistantPowerups( ent );
 		if( g_gametype.integer == GT_HARVESTER ) {
 			TossClientCubes( ent );
 		}
-#endif
 
 	}
 
@@ -1223,7 +1197,7 @@ void ClientDisconnect( int clientNum ) {
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
 	// if we are playing in tourney mode and losing, give a win to the other player
-	if ( (g_gametype.integer == GT_TOURNAMENT )
+	if ( (g_gametype.integer == GT_DUEL )
 		&& !level.intermissiontime
 		&& !level.warmupTime && level.sortedClients[1] == clientNum ) {
 		level.clients[ level.sortedClients[0] ].sess.wins++;

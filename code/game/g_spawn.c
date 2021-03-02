@@ -166,11 +166,9 @@ void SP_team_CTF_blueplayer( gentity_t *ent );
 void SP_team_CTF_redspawn( gentity_t *ent );
 void SP_team_CTF_bluespawn( gentity_t *ent );
 
-#ifdef MISSIONPACK
 void SP_team_blueobelisk( gentity_t *ent );
 void SP_team_redobelisk( gentity_t *ent );
 void SP_team_neutralobelisk( gentity_t *ent );
-#endif
 void SP_item_botroam( gentity_t *ent ) {};
 
 spawn_t	spawns[] = {
@@ -239,11 +237,9 @@ spawn_t	spawns[] = {
 	{"team_CTF_redspawn", SP_team_CTF_redspawn},
 	{"team_CTF_bluespawn", SP_team_CTF_bluespawn},
 
-#ifdef MISSIONPACK
 	{"team_redobelisk", SP_team_redobelisk},
 	{"team_blueobelisk", SP_team_blueobelisk},
 	{"team_neutralobelisk", SP_team_neutralobelisk},
-#endif
 	{"item_botroam", SP_item_botroam},
 
 	{0, 0}
@@ -389,7 +385,6 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 	int			i;
 	gentity_t	*ent;
 	char		*s, *value, *gametypeName;
-	static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
 
 	// get the next free entity
 	ent = G_Spawn();
@@ -399,15 +394,16 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 	}
 
 	// check for "notsingle" flag
-	if ( g_gametype.integer == GT_SINGLE_PLAYER ) {
+	if ( g_singlePlayer.integer ) {
 		G_SpawnInt( "notsingle", "0", &i );
 		if ( i ) {
 			G_FreeEntity( ent );
 			return;
 		}
 	}
-	// check for "notteam" flag (GT_FFA, GT_TOURNAMENT, GT_SINGLE_PLAYER)
-	if ( g_gametype.integer >= GT_TEAM ) {
+
+	// check for "notteam" flag
+	if ( GTx( g_gametype.integer, GTF_TEAMS ) ) {
 		G_SpawnInt( "notteam", "0", &i );
 		if ( i ) {
 			G_FreeEntity( ent );
@@ -436,8 +432,8 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 #endif
 
 	if( G_SpawnString( "gametype", NULL, &value ) ) {
-		if( g_gametype.integer >= GT_FFA && g_gametype.integer < GT_MAX_GAME_TYPE ) {
-			gametypeName = gametypeNames[g_gametype.integer];
+		if( g_gametype.integer >= 0 && g_gametype.integer < GT_MAX_GAME_TYPE ) {
+			gametypeName = gt[g_gametype.integer].gtSpawnRef;
 
 			s = strstr( value, gametypeName );
 			if( !s ) {
@@ -585,7 +581,7 @@ void SP_worldspawn( void ) {
 	g_entities[ENTITYNUM_NONE].classname = "nothing";
 
 	// see if we want a warmup time
-	if ( g_restarted.integer || g_gametype.integer == GT_SINGLE_PLAYER ) {
+	if ( g_restarted.integer || g_gametype.integer == GT_CAMPAIGN ) {
 		trap_Cvar_Set( "g_restarted", "0" );
 		level.warmupTime = 0;
 		trap_SetConfigstring( CS_WARMUP, "" );

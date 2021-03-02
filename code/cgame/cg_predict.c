@@ -342,7 +342,7 @@ static void CG_AddWeapon( int weapon, int quantity, qboolean dropped )
 	//ammo = quantity;
 
 	// dropped items and teamplay weapons always have full ammo
-	if ( !dropped && cgs.gametype != GT_TEAM ) {
+	if ( !dropped && cgs.gametype != GT_TDM ) {
 		if ( cg.predictedPlayerState.ammo[ weapon ] < quantity ) {
 			quantity = quantity - cg.predictedPlayerState.ammo[ weapon ];
 		} else {
@@ -496,16 +496,12 @@ static void CG_TouchItem( centity_t *cent ) {
 
 	// Special case for flags.  
 	// We don't predict touching our own flag
-#ifdef MISSIONPACK
-	if( cgs.gametype == GT_1FCTF ) {
+	if( cgs.gametype == GT_ONEFLAG ) {
 		if( item->giTag != PW_NEUTRALFLAG ) {
 			return;
 		}
 	}
 	if( cgs.gametype == GT_CTF || cgs.gametype == GT_HARVESTER ) {
-#else
-	if( cgs.gametype == GT_CTF ) {
-#endif
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
 			return;

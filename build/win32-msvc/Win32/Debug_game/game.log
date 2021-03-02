@@ -1,0 +1,43 @@
+﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  q_shared.c
+  q_math.c
+  g_weapon.c
+  g_utils.c
+  g_unlagged.c
+  g_trigger.c
+  g_team.c
+  g_target.c
+  g_syscalls.c
+  g_svcmds.c
+  g_spawn.c
+  g_session.c
+  g_rotation.c
+  g_mover.c
+  g_missile.c
+  g_misc.c
+  g_mem.c
+  g_main.c
+  g_items.c
+  g_combat.c
+  Generating Code...
+  Compiling...
+  g_cmds.c
+  g_client.c
+  g_bot.c
+  g_arenas.c
+  g_active.c
+  bg_pmove.c
+  bg_misc.c
+  bg_gametypes.c
+  ai_team.c
+  ai_main.c
+  ai_dmq3.c
+  ai_dmnet.c
+  ai_cmd.c
+  ai_chat.c
+  Generating Code...
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1341,5): warning MSB8012: TargetPath(C:\dm-game\build\win32-msvc\Win32\Debug\game.dll) does not match the Linker's OutputFile property value (C:\dm-game\build\win32-msvc\Win32\Debug\qagamex86.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1343,5): warning MSB8012: TargetName(game) does not match the Linker's OutputFile property value (qagamex86). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+ai_chat.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+     Creating library .\Win32\Debug\game.lib and object .\Win32\Debug\game.exp
+  game.vcxproj -> C:\dm-game\build\win32-msvc\Win32\Debug\game.dll

@@ -320,19 +320,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\code\game\bg_lib.c"
+				RelativePath="..\..\code\bgame\bg_lib.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_misc.c"
+				RelativePath="..\..\code\bgame\bg_gametypes.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_pmove.c"
+				RelativePath="..\..\code\bgame\bg_misc.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_slidemove.c"
+				RelativePath="..\..\code\bgame\bg_pmove.c"
 				>
 			</File>
 			<File
@@ -412,11 +412,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_math.c"
+				RelativePath="..\..\code\qcommon\q_math.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_shared.c"
+				RelativePath="..\..\code\qcommon\q_shared.c"
 				>
 			</File>
 		</Filter>
@@ -426,15 +426,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\code\game\bg_lib.h"
+				RelativePath="..\..\code\bgame\bg_lib.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_local.h"
+				RelativePath="..\..\code\bgame\bg_local.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\bg_public.h"
+				RelativePath="..\..\code\bgame\bg_public.h"
 				>
 			</File>
 			<File
@@ -450,11 +450,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\game\q_shared.h"
+				RelativePath="..\..\code\qcommon\q_shared.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\cgame\tr_types.h"
+				RelativePath="..\..\code\renderercommon\tr_types.h"
 				>
 			</File>
 		</Filter>

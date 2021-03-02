@@ -41,7 +41,7 @@ void AddScore( gentity_t *ent, vec3_t origin, int score ) {
 	ScorePlum(ent, origin, score);
 	//
 	ent->client->ps.persistant[PERS_SCORE] += score;
-	if ( g_gametype.integer == GT_TEAM ) {
+	if ( GTx( g_gametype.integer, GTF_TEAMS | GTF_TDM ) ) {
 		AddTeamScore( origin, ent->client->ps.persistant[PERS_TEAM], score );
 	}
 	CalculateRanks();
@@ -90,7 +90,7 @@ void TossClientItems( gentity_t *self ) {
 	}
 
 	// drop all the powerups if not in teamplay
-	if ( g_gametype.integer != GT_TEAM ) {
+	if ( g_gametype.integer != GT_TDM ) {
 		angle = 45;
 		for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ ) {
 			if ( self->client->ps.powerups[ i ] > level.time ) {
@@ -113,7 +113,6 @@ void TossClientItems( gentity_t *self ) {
 }
 
 
-#ifdef MISSIONPACK
 /*
 =================
 TossClientCubes
@@ -192,7 +191,6 @@ void TossClientPersistantPowerups( gentity_t *ent ) {
 	ent->client->ps.stats[STAT_PERSISTANT_POWERUP] = 0;
 	ent->client->persistantPowerup = NULL;
 }
-#endif
 
 
 /*
@@ -221,7 +219,6 @@ GibEntity
 ==================
 */
 void GibEntity( gentity_t *self, int killer ) {
-#ifdef MISSIONPACK
 	gentity_t *ent;
 	int i;
 
@@ -240,7 +237,6 @@ void GibEntity( gentity_t *self, int killer ) {
 			break;
 		}
 	}
-#endif
 
 	G_AddEvent( self, EV_GIB_PLAYER, killer );
 	self->takedamage = qfalse;
@@ -291,17 +287,15 @@ char	*modNames[] = {
 	"MOD_SUICIDE",
 	"MOD_TARGET_LASER",
 	"MOD_TRIGGER_HURT",
-#ifdef MISSIONPACK
 	"MOD_NAIL",
 	"MOD_CHAINGUN",
 	"MOD_PROXIMITY_MINE",
 	"MOD_KAMIKAZE",
 	"MOD_JUICED",
-#endif
 	"MOD_GRAPPLE"
 };
 
-#ifdef MISSIONPACK
+
 /*
 ==================
 Kamikaze_DeathActivate
@@ -330,7 +324,6 @@ void Kamikaze_DeathTimer( gentity_t *self ) {
 	ent->activator = self;
 }
 
-#endif
 
 /*
 ==================
@@ -447,13 +440,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if (self->client && self->client->hook) {
 		Weapon_HookFree(self->client->hook);
 	}
-#ifdef MISSIONPACK
 	if ((self->client->ps.eFlags & EF_TICKING) && self->activator) {
 		self->client->ps.eFlags &= ~EF_TICKING;
 		self->activator->think = G_FreeEntity;
 		self->activator->nextthink = level.time;
 	}
-#endif
 	self->client->ps.pm_type = PM_DEAD;
 
 	if ( attacker ) {
@@ -539,17 +530,13 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 	// if I committed suicide, the flag does not fall, it returns.
 	if (meansOfDeath == MOD_SUICIDE) {
-#ifdef MISSIONPACK
 		if ( self->client->ps.powerups[PW_NEUTRALFLAG] ) {		// only happens in One Flag CTF
 			Team_ReturnFlag( TEAM_FREE );
 			self->client->ps.powerups[PW_NEUTRALFLAG] = 0;
-		} else 
-#endif
-		if ( self->client->ps.powerups[PW_REDFLAG] ) {		// only happens in standard CTF
+		} else if ( self->client->ps.powerups[PW_REDFLAG] ) {		// only happens in standard CTF
 			Team_ReturnFlag( TEAM_RED );
 			self->client->ps.powerups[PW_REDFLAG] = 0;
-		}
-		else if ( self->client->ps.powerups[PW_BLUEFLAG] ) {	// only happens in standard CTF
+		} else if ( self->client->ps.powerups[PW_BLUEFLAG] ) {	// only happens in standard CTF
 			Team_ReturnFlag( TEAM_BLUE );
 			self->client->ps.powerups[PW_BLUEFLAG] = 0;
 		}
@@ -571,12 +558,10 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			Team_ReturnFlag( TEAM_BLUE );
 		}
 	}
-#ifdef MISSIONPACK
 	TossClientPersistantPowerups( self );
 	if( g_gametype.integer == GT_HARVESTER ) {
 		TossClientCubes( self );
 	}
-#endif
 
 	Cmd_Score_f( self );		// show scores
 	// send updated scores to any clients that are following this one,
@@ -659,11 +644,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		// globally cycle through the different death animations
 		i = ( i + 1 ) % 3;
 
-#ifdef MISSIONPACK
 		if (self->s.eFlags & EF_KAMIKAZE) {
 			Kamikaze_DeathTimer( self );
 		}
-#endif
 	}
 
 	trap_LinkEntity (self);
@@ -744,7 +727,7 @@ int RaySphereIntersections( vec3_t origin, float radius, vec3_t point, vec3_t di
 	return 0;
 }
 
-#ifdef MISSIONPACK
+
 /*
 ================
 G_InvulnerabilityEffect
@@ -782,7 +765,8 @@ int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t i
 		return qfalse;
 	}
 }
-#endif
+
+
 /*
 ============
 G_Damage
@@ -814,9 +798,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int			asave;
 	int			knockback;
 	int			max;
-#ifdef MISSIONPACK
 	vec3_t		bouncedir, impactpoint;
-#endif
 
 	if (!targ->takedamage) {
 		return;
@@ -827,7 +809,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( level.intermissionQueued ) {
 		return;
 	}
-#ifdef MISSIONPACK
 	if ( targ->client && mod != MOD_JUICED) {
 		if ( targ->client->invulnerabilityTime > level.time) {
 			if ( dir && point ) {
@@ -836,7 +817,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			return;
 		}
 	}
-#endif
 	if ( !inflictor ) {
 		inflictor = &g_entities[ENTITYNUM_WORLD];
 	}
@@ -851,20 +831,16 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		}
 		return;
 	}
-#ifdef MISSIONPACK
-	if( g_gametype.integer == GT_OBELISK && CheckObeliskAttack( targ, attacker ) ) {
+	if( g_gametype.integer == GT_OVERLOAD && CheckObeliskAttack( targ, attacker ) ) {
 		return;
 	}
-#endif
 	// reduce damage by the attacker's handicap value
 	// unless they are rocket jumping
 	if ( attacker->client && attacker != targ ) {
 		max = attacker->client->ps.stats[STAT_MAX_HEALTH];
-#ifdef MISSIONPACK
 		if( bg_itemlist[attacker->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
 			max /= 2;
 		}
-#endif
 		damage = damage * max / 100;
 	}
 
@@ -925,16 +901,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 		// if TF_NO_FRIENDLY_FIRE is set, don't do damage to the target
 		// if the attacker was on the same team
-#ifdef MISSIONPACK
 		if ( mod != MOD_JUICED && targ != attacker && !(dflags & DAMAGE_NO_TEAM_PROTECTION) && OnSameTeam (targ, attacker)  ) {
-#else	
-		if ( targ != attacker && OnSameTeam (targ, attacker)  ) {
-#endif
 			if ( !g_friendlyFire.integer ) {
 				return;
 			}
 		}
-#ifdef MISSIONPACK
+
 		if (mod == MOD_PROXIMITY_MINE) {
 			if (inflictor && inflictor->parent && OnSameTeam(targ, inflictor->parent)) {
 				return;
@@ -943,7 +915,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 				return;
 			}
 		}
-#endif
 
 		// check for godmode
 		if ( targ->flags & FL_GODMODE ) {
@@ -986,14 +957,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( attacker->client && client && targ != attacker && targ->health > 0
 			&& targ->s.eType != ET_MISSILE
 			&& targ->s.eType != ET_GENERAL) {
-#ifdef MISSIONPACK
 		if ( OnSameTeam( targ, attacker ) ) {
 			attacker->client->ps.persistant[PERS_HITS]--;
 		} else {
 			attacker->client->ps.persistant[PERS_HITS]++;
 		}
 		attacker->client->ps.persistant[PERS_ATTACKEE_ARMOR] = (targ->health<<8)|(client->ps.stats[STAT_ARMOR]);
-#else
+
 		// we may hit multiple targets from different teams
 		// so usual PERS_HITS increments/decrements could result in ZERO delta
 		if ( OnSameTeam( targ, attacker ) ) {
@@ -1003,7 +973,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			// accumulate damage during server frame
 			attacker->client->damage.amount += take + asave;
 		}
-#endif
+
 	}
 
 	// add to the damage inflicted on a player this frame
@@ -1028,11 +998,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	// See if it's the player hurting the emeny flag carrier
-#ifdef MISSIONPACK
-	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF ) {
-#else	
-	if( g_gametype.integer == GT_CTF) {
-#endif
+	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_ONEFLAG ) {
 		Team_CheckHurtCarrier(targ, attacker);
 	}
 

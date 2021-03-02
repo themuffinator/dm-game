@@ -180,7 +180,7 @@ void InGame_MenuInit( void ) {
 	s_ingame.addbots.style				= UI_CENTER|UI_SMALLFONT;
 
 	if ( !trap_Cvar_VariableValue( "sv_running" ) || !trap_Cvar_VariableValue( "bot_enable" ) 
-		|| trap_Cvar_VariableValue( "ui_gametype" ) == GT_SINGLE_PLAYER ) {
+		|| trap_Cvar_VariableValue( "ui_gametype" ) == GT_CAMPAIGN ) {
 		s_ingame.addbots.generic.flags |= QMF_GRAYED;
 	}
 
@@ -196,7 +196,7 @@ void InGame_MenuInit( void ) {
 	s_ingame.removebots.style				= UI_CENTER|UI_SMALLFONT;
 
 	if ( !trap_Cvar_VariableValue( "sv_running" ) || !trap_Cvar_VariableValue( "bot_enable" )
-		|| trap_Cvar_VariableValue( "ui_gametype" ) == GT_SINGLE_PLAYER ) {
+		|| trap_Cvar_VariableValue( "ui_gametype" ) == GT_CAMPAIGN ) {
 		s_ingame.removebots.generic.flags |= QMF_GRAYED;
 	}
 
@@ -211,7 +211,7 @@ void InGame_MenuInit( void ) {
 	s_ingame.teamorders.color				= color_red;
 	s_ingame.teamorders.style				= UI_CENTER|UI_SMALLFONT;
 
-	if( trap_Cvar_VariableValue( "ui_gametype" ) < GT_TEAM )
+	if( trap_Cvar_VariableValue( "ui_gametype" ) < GT_TDM )
 	{
 		s_ingame.teamorders.generic.flags |= QMF_GRAYED;
 	}

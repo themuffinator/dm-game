@@ -2,8 +2,8 @@
 //
 // g_local.h -- local definitions for game module
 
-#include "q_shared.h"
-#include "bg_public.h"
+#include "../qcommon/q_shared.h"
+#include "../bgame/bg_public.h"
 #include "g_public.h"
 
 //==================================================================
@@ -31,6 +31,15 @@
 #define FL_NO_BOTS				0x00002000	// spawn point not for bot use
 #define FL_NO_HUMANS			0x00004000	// spawn point just for bots
 #define FL_FORCE_GESTURE		0x00008000	// force gesture on client
+
+//dm
+#define AP( x ) trap_SendServerCommand( -1, x )                 // Print to all
+#define CP( x ) trap_SendServerCommand( ent - g_entities, x )     // Print to an ent
+#define CPx( x, y ) trap_SendServerCommand( x, y )              // Print to id = x
+
+#define NotGT( x ) gt[sg_gametype.integer].gtFlags & ~(x)
+#define GTx( x, y ) gt[x].gtFlags & (y)
+//-dm
 
 // movers are things like doors, plats, buttons, etc
 typedef enum {
@@ -140,10 +149,8 @@ struct gentity_s {
 	gentity_t	*teamchain;		// next entity in team
 	gentity_t	*teammaster;	// master of the team
 
-#ifdef MISSIONPACK
 	int			kamikazeTime;
 	int			kamikazeShockTime;
-#endif
 
 	int			watertype;
 	int			waterlevel;
@@ -311,12 +318,10 @@ struct gclient_s {
 	// like health / armor countdowns and regeneration
 	int			timeResidual;
 
-#ifdef MISSIONPACK
 	gentity_t	*persistantPowerup;
 	int			portalID;
 	int			ammoTimes[WP_NUM_WEAPONS];
 	int			invulnerabilityTime;
-#endif
 
 	char		*areabits;
 
@@ -426,9 +431,7 @@ typedef struct {
 	gentity_t	*locationHead;			// head of the location list
 	int			bodyQueIndex;			// dead bodies
 	gentity_t	*bodyQue[BODY_QUEUE_SIZE];
-#ifdef MISSIONPACK
 	int			portalSequence;
-#endif
 
 	// spawn spots
 	gentity_t	*spawnSpots[NUM_SPAWN_SPOTS];
@@ -531,9 +534,7 @@ qboolean G_RadiusDamage (vec3_t origin, gentity_t *attacker, float damage, float
 int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t impactpoint, vec3_t bouncedir );
 void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath );
 void TossClientItems( gentity_t *self );
-#ifdef MISSIONPACK
 void TossClientPersistantPowerups( gentity_t *self );
-#endif
 void TossClientCubes( gentity_t *self );
 
 // damage flags
@@ -541,9 +542,7 @@ void TossClientCubes( gentity_t *self );
 #define DAMAGE_NO_ARMOR				0x00000002	// armor does not protect from this damage
 #define DAMAGE_NO_KNOCKBACK			0x00000004	// do not affect velocity, just view angles
 #define DAMAGE_NO_PROTECTION		0x00000008  // armor, shields, invulnerability, and godmode have no effect
-#ifdef MISSIONPACK
 #define DAMAGE_NO_TEAM_PROTECTION	0x00000010  // armor, shields, invulnerability, and godmode have no effect
-#endif
 
 //
 // g_missile.c
@@ -556,10 +555,8 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t aimdir);
 gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir);
 gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir);
 gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir);
-#ifdef MISSIONPACK
 gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up );
 gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t aimdir );
-#endif
 
 
 //
@@ -578,10 +575,8 @@ void trigger_teleporter_touch (gentity_t *self, gentity_t *other, trace_t *trace
 // g_misc.c
 //
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles );
-#ifdef MISSIONPACK
 void DropPortalSource( gentity_t *ent );
 void DropPortalDestination( gentity_t *ent );
-#endif
 
 
 //
@@ -625,9 +620,7 @@ qboolean G_FilterPacket (char *from);
 // g_weapon.c
 //
 void FireWeapon( gentity_t *ent );
-#ifdef MISSIONPACK
 void G_StartKamikaze( gentity_t *ent );
-#endif
 
 //
 // g_cmds.c

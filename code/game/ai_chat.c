@@ -11,15 +11,15 @@
  *****************************************************************************/
 
 #include "g_local.h"
-#include "botlib.h"
-#include "be_aas.h"
-#include "be_ea.h"
-#include "be_ai_char.h"
-#include "be_ai_chat.h"
-#include "be_ai_gen.h"
-#include "be_ai_goal.h"
-#include "be_ai_move.h"
-#include "be_ai_weap.h"
+#include "../botlib/botlib.h"
+#include "../botlib/be_aas.h"
+#include "../botlib/be_ea.h"
+#include "../botlib/be_ai_char.h"
+#include "../botlib/be_ai_chat.h"
+#include "../botlib/be_ai_gen.h"
+#include "../botlib/be_ai_goal.h"
+#include "../botlib/be_ai_move.h"
+#include "../botlib/be_ai_weap.h"
 //
 #include "ai_main.h"
 #include "ai_dmq3.h"
@@ -31,11 +31,6 @@
 #include "inv.h"				//indexes into the inventory
 #include "syn.h"				//synonyms
 #include "match.h"				//string matching types and vars
-
-// for the voice chats
-#ifdef MISSIONPACK
-#include "../../ui/menudef.h"
-#endif
 
 #define TIME_BETWEENCHATTING	25
 
@@ -243,13 +238,11 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 		case MOD_LIGHTNING: return "Lightning Gun";
 		case MOD_BFG:
 		case MOD_BFG_SPLASH: return "BFG10K";
-#ifdef MISSIONPACK
 		case MOD_NAIL: return "Nailgun";
 		case MOD_CHAINGUN: return "Chaingun";
 		case MOD_PROXIMITY_MINE: return "Proximity Launcher";
 		case MOD_KAMIKAZE: return "Kamikaze";
 		case MOD_JUICED: return "Prox mine";
-#endif
 		case MOD_GRAPPLE: return "Grapple";
 		default: return "[unknown weapon]";
 	}
@@ -263,11 +256,8 @@ BotRandomWeaponName
 char *BotRandomWeaponName(void) {
 	int rnd;
 
-#ifdef MISSIONPACK
 	rnd = random() * 11.9;
-#else
-	rnd = random() * 8.9;
-#endif
+
 	switch(rnd) {
 		case 0: return "Gauntlet";
 		case 1: return "Shotgun";
@@ -277,11 +267,9 @@ char *BotRandomWeaponName(void) {
 		case 5: return "Plasmagun";
 		case 6: return "Railgun";
 		case 7: return "Lightning Gun";
-#ifdef MISSIONPACK
 		case 8: return "Nailgun";
 		case 9: return "Chaingun";
 		case 10: return "Proximity Launcher";
-#endif
 		default: return "BFG10K";
 	}
 }
@@ -370,9 +358,9 @@ int BotChat_EnterGame(bot_state_t *bs) {
 	if (bot_nochat.integer) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -403,9 +391,9 @@ int BotChat_ExitGame(bot_state_t *bs) {
 	if (bot_nochat.integer) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -437,14 +425,11 @@ int BotChat_StartLevel(bot_state_t *bs) {
 	if (BotIsObserver(bs)) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) {
-#ifdef MISSIONPACK
-	    trap_EA_Command(bs->client, "vtaunt");
-#endif
+	if ( TeamPlayIsOn() ) {
 	    return qfalse;
 	}
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_STARTENDLEVEL, 0, 1);
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -471,17 +456,11 @@ int BotChat_EndLevel(bot_state_t *bs) {
 	if (BotIsObserver(bs)) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	// teamplay
-	if (TeamPlayIsOn()) 
-	{
-#ifdef MISSIONPACK
-		if (BotIsFirstInRankings(bs)) {
-			trap_EA_Command(bs->client, "vtaunt");
-		}
-#endif
+	if ( TeamPlayIsOn() ) {
 		return qtrue;
 	}
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_STARTENDLEVEL, 0, 1);
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -533,7 +512,7 @@ int BotChat_Death(bot_state_t *bs) {
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_DEATH, 0, 1);
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chatting is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -553,10 +532,7 @@ int BotChat_Death(bot_state_t *bs) {
 	else
 	{
 		//teamplay
-		if (TeamPlayIsOn()) {
-#ifdef MISSIONPACK
-			trap_EA_Command(bs->client, "vtaunt");
-#endif
+		if ( TeamPlayIsOn() ) {
 			return qtrue;
 		}
 		//
@@ -577,10 +553,8 @@ int BotChat_Death(bot_state_t *bs) {
 			BotAI_BotInitialChat(bs, "death_suicide", BotRandomOpponentName(bs), NULL);
 		else if (bs->botdeathtype == MOD_TELEFRAG)
 			BotAI_BotInitialChat(bs, "death_telefrag", name, NULL);
-#ifdef MISSIONPACK
 		else if (bs->botdeathtype == MOD_KAMIKAZE && trap_BotNumInitialChats(bs->cs, "death_kamikaze"))
 			BotAI_BotInitialChat(bs, "death_kamikaze", name, NULL);
-#endif
 		else {
 			if ((bs->botdeathtype == MOD_GAUNTLET ||
 				bs->botdeathtype == MOD_RAILGUN ||
@@ -636,7 +610,7 @@ int BotChat_Kill(bot_state_t *bs) {
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_KILL, 0, 1);
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chat is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -657,10 +631,7 @@ int BotChat_Kill(bot_state_t *bs) {
 	else
 	{
 		//don't chat in teamplay
-		if (TeamPlayIsOn()) {
-#ifdef MISSIONPACK
-			trap_EA_Command(bs->client, "vtaunt");
-#endif
+		if ( TeamPlayIsOn() ) {
 			return qfalse;			// don't wait
 		}
 		//
@@ -673,10 +644,8 @@ int BotChat_Kill(bot_state_t *bs) {
 		else if (bs->enemydeathtype == MOD_TELEFRAG) {
 			BotAI_BotInitialChat(bs, "kill_telefrag", name, NULL);
 		}
-#ifdef MISSIONPACK
 		else if (bs->botdeathtype == MOD_KAMIKAZE && trap_BotNumInitialChats(bs->cs, "kill_kamikaze"))
 			BotAI_BotInitialChat(bs, "kill_kamikaze", name, NULL);
-#endif
 		//choose between insult and praise
 		else if (random() < trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_INSULT, 0, 1)) {
 			BotAI_BotInitialChat(bs, "kill_insult", name, NULL);
@@ -704,9 +673,9 @@ int BotChat_EnemySuicide(bot_state_t *bs) {
 	//
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENEMYSUICIDE, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chat is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd) return qfalse;
@@ -744,9 +713,9 @@ int BotChat_HitTalking(bot_state_t *bs) {
 	//
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITTALKING, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chat is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd * 0.5) return qfalse;
@@ -784,9 +753,9 @@ int BotChat_HitNoDeath(bot_state_t *bs) {
 	if (BotNumActivePlayers() <= 1) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITNODEATH, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chat is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd * 0.5) return qfalse;
@@ -822,9 +791,9 @@ int BotChat_HitNoKill(bot_state_t *bs) {
 	if (BotNumActivePlayers() <= 1) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITNOKILL, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if ( TeamPlayIsOn() ) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//if fast chat is off
 	if (!bot_fastchat.integer) {
 		if (random() > rnd * 0.5) return qfalse;
@@ -858,7 +827,7 @@ int BotChat_Random(bot_state_t *bs) {
 	if (BotIsObserver(bs)) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_DUEL) return qfalse;
 	//don't chat when doing something important :)
 	if (bs->ltgtype == LTG_TEAMHELP ||
 		bs->ltgtype == LTG_TEAMACCOMPANY ||
@@ -882,10 +851,7 @@ int BotChat_Random(bot_state_t *bs) {
 	else {
 		EasyClientName(bs->lastkilledplayer, name, sizeof(name));
 	}
-	if (TeamPlayIsOn()) {
-#ifdef MISSIONPACK
-		trap_EA_Command(bs->client, "vtaunt");
-#endif
+	if ( TeamPlayIsOn() ) {
 		return qfalse;			// don't wait
 	}
 	//

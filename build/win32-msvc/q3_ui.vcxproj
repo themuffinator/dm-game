@@ -155,10 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\code\game\bg_lib.c" />
-    <ClCompile Include="..\..\code\game\bg_misc.c" />
-    <ClCompile Include="..\..\code\game\q_math.c" />
-    <ClCompile Include="..\..\code\game\q_shared.c" />
+    <ClCompile Include="..\..\code\bgame\bg_gametypes.c" />
+    <ClCompile Include="..\..\code\bgame\bg_lib.c" />
+    <ClCompile Include="..\..\code\bgame\bg_misc.c" />
     <ClCompile Include="..\..\code\q3_ui\ui_addbots.c" />
     <ClCompile Include="..\..\code\q3_ui\ui_atoms.c" />
     <ClCompile Include="..\..\code\q3_ui\ui_cdkey.c" />
@@ -200,14 +199,16 @@
     <ClCompile Include="..\..\code\q3_ui\ui_team.c" />
     <ClCompile Include="..\..\code\q3_ui\ui_teamorders.c" />
     <ClCompile Include="..\..\code\q3_ui\ui_video.c" />
+    <ClCompile Include="..\..\code\qcommon\q_math.c" />
+    <ClCompile Include="..\..\code\qcommon\q_shared.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\code\game\bg_lib.h" />
-    <ClInclude Include="..\..\code\game\bg_public.h" />
+    <ClInclude Include="..\..\code\bgame\bg_lib.h" />
+    <ClInclude Include="..\..\code\bgame\bg_public.h" />
+    <ClInclude Include="..\..\code\client\keycodes.h" />
     <ClInclude Include="..\..\code\game\match.h" />
-    <ClInclude Include="..\..\code\game\q_shared.h" />
-    <ClInclude Include="..\..\code\q3_ui\keycodes.h" />
     <ClInclude Include="..\..\code\q3_ui\ui_local.h" />
+    <ClInclude Include="..\..\code\qcommon\q_shared.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

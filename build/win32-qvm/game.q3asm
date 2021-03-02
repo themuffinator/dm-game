@@ -6,11 +6,10 @@ ai_dmnet
 ai_dmq3
 ai_main
 ai_team
-ai_vcmd
+bg_gametypes
 bg_lib
 bg_misc
 bg_pmove
-bg_slidemove
 g_active
 g_arenas
 g_bot

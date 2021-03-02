@@ -2,9 +2,9 @@
 #define __UI_SHARED_H
 
 
-#include "../game/q_shared.h"
-#include "../cgame/tr_types.h"
-#include "keycodes.h"
+#include "../qcommon/q_shared.h"
+#include "../renderercommon/tr_types.h"
+#include "../client/keycodes.h"
 
 #include "../../ui/menudef.h"
 

@@ -1,0 +1,57 @@
+﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  q_shared.c
+  q_math.c
+  ui_video.c
+  ui_teamorders.c
+  ui_team.c
+  ui_syscalls.c
+  ui_startserver.c
+  ui_spskill.c
+  ui_spreset.c
+  ui_sppostgame.c
+  ui_splevel.c
+  ui_specifyserver.c
+  ui_sparena.c
+  ui_sound.c
+  ui_setup.c
+  ui_servers2.c
+  ui_serverinfo.c
+  ui_saveconfig.c
+  ui_removebots.c
+  ui_qmenu.c
+  Generating Code...
+  Compiling...
+  ui_preferences.c
+  ui_playersettings.c
+  ui_players.c
+  ui_playermodel.c
+  ui_options.c
+  ui_network.c
+  ui_mods.c
+  ui_mfield.c
+  ui_menu.c
+  ui_main.c
+  ui_loadconfig.c
+  ui_ingame.c
+  ui_gameinfo.c
+  ui_display.c
+  ui_demo2.c
+  ui_credits.c
+  ui_controls2.c
+  ui_connect.c
+  ui_confirm.c
+  ui_cinematics.c
+  Generating Code...
+  Compiling...
+  ui_cdkey.c
+  ui_atoms.c
+  ui_addbots.c
+  bg_misc.c
+  bg_lib.c
+  bg_gametypes.c
+  Generating Code...
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1341,5): warning MSB8012: TargetPath(C:\dm-game\build\win32-msvc\Win32\Debug\q3_ui.dll) does not match the Linker's OutputFile property value (C:\dm-game\build\win32-msvc\Win32\Debug\uix86.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1343,5): warning MSB8012: TargetName(q3_ui) does not match the Linker's OutputFile property value (uix86). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+bg_gametypes.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+     Creating library .\Win32\Debug\q3_ui.lib and object .\Win32\Debug\q3_ui.exp
+  q3_ui.vcxproj -> C:\dm-game\build\win32-msvc\Win32\Debug\q3_ui.dll

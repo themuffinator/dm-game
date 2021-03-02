@@ -407,7 +407,7 @@ void G_CheckMinimumPlayers( void ) {
 	minplayers = bot_minplayers.integer;
 	if (minplayers <= 0) return;
 
-	if (g_gametype.integer >= GT_TEAM) {
+	if ( GTx( g_gametype.integer, GTF_TEAMS ) ) {
 		if (minplayers >= level.maxclients / 2) {
 			minplayers = (level.maxclients / 2) -1;
 		}
@@ -430,7 +430,7 @@ void G_CheckMinimumPlayers( void ) {
 			G_RemoveRandomBot( TEAM_BLUE );
 		}
 	}
-	else if (g_gametype.integer == GT_TOURNAMENT ) {
+	else if ( GTx( g_gametype.integer, GTF_DUEL ) ) {
 		if (minplayers >= level.maxclients) {
 			minplayers = level.maxclients-1;
 		}
@@ -447,7 +447,7 @@ void G_CheckMinimumPlayers( void ) {
 			}
 		}
 	}
-	else if (g_gametype.integer == GT_FFA) {
+	else if ( gt[g_gametype.integer].gtGoal ) {
 		if (minplayers >= level.maxclients) {
 			minplayers = level.maxclients-1;
 		}
@@ -484,7 +484,7 @@ void G_CheckBotSpawn( void ) {
 		ClientBegin( botSpawnQueue[n].clientNum );
 		botSpawnQueue[n].spawnTime = 0;
 
-		if( g_gametype.integer == GT_SINGLE_PLAYER ) {
+		if( g_gametype.integer == GT_CAMPAIGN ) {
 			trap_GetUserinfo( botSpawnQueue[n].clientNum, userinfo, sizeof(userinfo) );
 			PlayerIntroSound( Info_ValueForKey (userinfo, "model") );
 		}
@@ -902,7 +902,7 @@ static void G_LoadBots( void ) {
 
 	trap_Cvar_Register( &botsFile, "g_botsFile", "", CVAR_ARCHIVE | CVAR_LATCH );
 
-	if ( *botsFile.string && g_gametype.integer != GT_SINGLE_PLAYER ) {
+	if ( *botsFile.string && g_gametype.integer != GT_CAMPAIGN ) {
 		G_LoadBotsFromFile( botsFile.string );
 	} else {
 		G_LoadBotsFromFile( "scripts/bots.txt" );
@@ -973,7 +973,7 @@ void G_InitBots( qboolean restart ) {
 
 	trap_Cvar_Register( &bot_minplayers, "bot_minplayers", "0", CVAR_SERVERINFO );
 
-	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
+	if( g_gametype.integer == GT_CAMPAIGN ) {
 		arenainfo = G_GetArenaInfoByMap( mapname );
 		if ( !arenainfo ) {
 			return;

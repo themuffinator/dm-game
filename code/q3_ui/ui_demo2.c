@@ -10,7 +10,7 @@ DEMOS MENU
 
 
 #include "ui_local.h"
-#include "../game/q_shared.h"
+#include "../qcommon/q_shared.h"
 
 
 #define ART_BACK0			"menu/art/back_0"

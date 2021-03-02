@@ -11,18 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\code\game\bg_lib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\game\bg_misc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\game\bg_pmove.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\game\bg_slidemove.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\cgame\cg_consolecmds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -80,23 +68,26 @@
     <ClCompile Include="..\..\code\cgame\cg_weapons.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\q_math.c">
+    <ClCompile Include="..\..\code\qcommon\q_math.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\q_shared.c">
+    <ClCompile Include="..\..\code\qcommon\q_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\bgame\bg_gametypes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\bgame\bg_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\bgame\bg_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\bgame\bg_pmove.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\code\game\bg_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\game\bg_local.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\game\bg_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\cgame\cg_local.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -106,10 +97,19 @@
     <ClInclude Include="..\..\code\game\match.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\game\q_shared.h">
+    <ClInclude Include="..\..\code\qcommon\q_shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\cgame\tr_types.h">
+    <ClInclude Include="..\..\code\renderercommon\tr_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\bgame\bg_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\bgame\bg_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\bgame\bg_public.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -148,6 +148,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\code\bgame\bg_gametypes.c" />
+    <ClCompile Include="..\..\code\bgame\bg_lib.c" />
+    <ClCompile Include="..\..\code\bgame\bg_misc.c" />
+    <ClCompile Include="..\..\code\bgame\bg_pmove.c" />
     <ClCompile Include="..\..\code\cgame\cg_consolecmds.c" />
     <ClCompile Include="..\..\code\cgame\cg_draw.c" />
     <ClCompile Include="..\..\code\cgame\cg_drawtools.c" />
@@ -167,22 +171,18 @@
     <ClCompile Include="..\..\code\cgame\cg_syscalls.c" />
     <ClCompile Include="..\..\code\cgame\cg_view.c" />
     <ClCompile Include="..\..\code\cgame\cg_weapons.c" />
-    <ClCompile Include="..\..\code\game\bg_lib.c" />
-    <ClCompile Include="..\..\code\game\bg_misc.c" />
-    <ClCompile Include="..\..\code\game\bg_pmove.c" />
-    <ClCompile Include="..\..\code\game\bg_slidemove.c" />
-    <ClCompile Include="..\..\code\game\q_math.c" />
-    <ClCompile Include="..\..\code\game\q_shared.c" />
+    <ClCompile Include="..\..\code\qcommon\q_math.c" />
+    <ClCompile Include="..\..\code\qcommon\q_shared.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\code\bgame\bg_lib.h" />
+    <ClInclude Include="..\..\code\bgame\bg_local.h" />
+    <ClInclude Include="..\..\code\bgame\bg_public.h" />
     <ClInclude Include="..\..\code\cgame\cg_local.h" />
     <ClInclude Include="..\..\code\cgame\cg_public.h" />
-    <ClInclude Include="..\..\code\cgame\tr_types.h" />
-    <ClInclude Include="..\..\code\game\bg_lib.h" />
-    <ClInclude Include="..\..\code\game\bg_local.h" />
-    <ClInclude Include="..\..\code\game\bg_public.h" />
+    <ClInclude Include="..\..\code\renderercommon\tr_types.h" />
     <ClInclude Include="..\..\code\game\match.h" />
-    <ClInclude Include="..\..\code\game\q_shared.h" />
+    <ClInclude Include="..\..\code\qcommon\q_shared.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\code\cgame\cgame.def" />

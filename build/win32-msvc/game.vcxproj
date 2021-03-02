@@ -154,16 +154,15 @@
     <ClCompile Include="..\..\code\game\ai_dmq3.c" />
     <ClCompile Include="..\..\code\game\ai_main.c" />
     <ClCompile Include="..\..\code\game\ai_team.c" />
-    <ClCompile Include="..\..\code\game\ai_vcmd.c" />
-    <ClCompile Include="..\..\code\game\bg_lib.c">
+    <ClCompile Include="..\..\code\bgame\bg_lib.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\code\game\bg_misc.c" />
-    <ClCompile Include="..\..\code\game\bg_pmove.c" />
-    <ClCompile Include="..\..\code\game\bg_slidemove.c" />
+    <ClCompile Include="..\..\code\bgame\bg_gametypes.c" />
+    <ClCompile Include="..\..\code\bgame\bg_misc.c" />
+    <ClCompile Include="..\..\code\bgame\bg_pmove.c" />
     <ClCompile Include="..\..\code\game\g_active.c" />
     <ClCompile Include="..\..\code\game\g_arenas.c" />
     <ClCompile Include="..\..\code\game\g_bot.c" />
@@ -187,39 +186,37 @@
     <ClCompile Include="..\..\code\game\g_unlagged.c" />
     <ClCompile Include="..\..\code\game\g_utils.c" />
     <ClCompile Include="..\..\code\game\g_weapon.c" />
-    <ClCompile Include="..\..\code\game\q_math.c" />
-    <ClCompile Include="..\..\code\game\q_shared.c" />
+    <ClCompile Include="..\..\code\qcommon\q_math.c" />
+    <ClCompile Include="..\..\code\qcommon\q_shared.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\code\bgame\bg_lib.h" />
+    <ClInclude Include="..\..\code\bgame\bg_local.h" />
+    <ClInclude Include="..\..\code\bgame\bg_public.h" />
+    <ClInclude Include="..\..\code\botlib\be_aas.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_char.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_chat.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_gen.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_goal.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_move.h" />
+    <ClInclude Include="..\..\code\botlib\be_ai_weap.h" />
+    <ClInclude Include="..\..\code\botlib\be_ea.h" />
+    <ClInclude Include="..\..\code\botlib\botlib.h" />
     <ClInclude Include="..\..\code\game\ai_chat.h" />
     <ClInclude Include="..\..\code\game\ai_cmd.h" />
     <ClInclude Include="..\..\code\game\ai_dmnet.h" />
     <ClInclude Include="..\..\code\game\ai_dmq3.h" />
     <ClInclude Include="..\..\code\game\ai_main.h" />
     <ClInclude Include="..\..\code\game\ai_team.h" />
-    <ClInclude Include="..\..\code\game\ai_vcmd.h" />
-    <ClInclude Include="..\..\code\game\be_aas.h" />
-    <ClInclude Include="..\..\code\game\be_ai_char.h" />
-    <ClInclude Include="..\..\code\game\be_ai_chat.h" />
-    <ClInclude Include="..\..\code\game\be_ai_gen.h" />
-    <ClInclude Include="..\..\code\game\be_ai_goal.h" />
-    <ClInclude Include="..\..\code\game\be_ai_move.h" />
-    <ClInclude Include="..\..\code\game\be_ai_weap.h" />
-    <ClInclude Include="..\..\code\game\be_ea.h" />
-    <ClInclude Include="..\..\code\game\bg_lib.h" />
-    <ClInclude Include="..\..\code\game\bg_local.h" />
-    <ClInclude Include="..\..\code\game\bg_public.h" />
-    <ClInclude Include="..\..\code\game\botlib.h" />
     <ClInclude Include="..\..\code\game\chars.h" />
     <ClInclude Include="..\..\code\game\g_local.h" />
     <ClInclude Include="..\..\code\game\g_public.h" />
-    <ClInclude Include="..\..\code\game\g_rankings.h" />
     <ClInclude Include="..\..\code\game\g_team.h" />
     <ClInclude Include="..\..\code\game\inv.h" />
     <ClInclude Include="..\..\code\game\match.h" />
-    <ClInclude Include="..\..\code\game\q_shared.h" />
-    <ClInclude Include="..\..\code\game\surfaceflags.h" />
     <ClInclude Include="..\..\code\game\syn.h" />
+    <ClInclude Include="..\..\code\qcommon\q_shared.h" />
+    <ClInclude Include="..\..\code\qcommon\surfaceflags.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

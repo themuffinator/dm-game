@@ -4,10 +4,6 @@
 
 #include "cg_local.h"
 
-// for the voice chats
-#ifdef MISSIONPACK // bk001205
-#include "../../ui/menudef.h"
-#endif
 //==========================================================================
 
 /*
@@ -136,11 +132,9 @@ static void CG_Obituary( entityState_t *ent ) {
 	if (attacker == target) {
 		gender = ci->gender;
 		switch (mod) {
-#ifdef MISSIONPACK
 		case MOD_KAMIKAZE:
 			message = "goes out with a bang";
 			break;
-#endif
 		case MOD_GRENADE_SPLASH:
 			if ( gender == GENDER_FEMALE )
 				message = "tripped on her own grenade";
@@ -168,7 +162,6 @@ static void CG_Obituary( entityState_t *ent ) {
 		case MOD_BFG_SPLASH:
 			message = "should have used a smaller gun";
 			break;
-#ifdef MISSIONPACK
 		case MOD_PROXIMITY_MINE:
 			if( gender == GENDER_FEMALE ) {
 				message = "found her prox mine";
@@ -178,7 +171,6 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "found his prox mine";
 			}
 			break;
-#endif
 		default:
 			if ( gender == GENDER_FEMALE )
 				message = "killed herself";
@@ -206,20 +198,14 @@ static void CG_Obituary( entityState_t *ent ) {
 	if ( attacker == cg.snap->ps.clientNum ) {
 		char	*s;
 
-		if ( cgs.gametype < GT_TEAM ) {
+		if ( cgs.gametype < GT_TDM ) {
 			s = va("You fragged %s\n%s place with %i", targetName, 
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
 				cg.snap->ps.persistant[PERS_SCORE] );
 		} else {
 			s = va("You fragged %s", targetName );
 		}
-#ifdef MISSIONPACK
-		if (!(cg_singlePlayerActive.integer && cg_cameraOrbit.integer)) {
-			CG_CenterPrint( s, SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
-		} 
-#else
 		CG_CenterPrint( s, SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
-#endif
 
 		// print the text message as well
 	}
@@ -294,7 +280,6 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = "was blasted by";
 			message2 = "'s BFG";
 			break;
-#ifdef MISSIONPACK
 		case MOD_NAIL:
 			message = "was nailed by";
 			break;
@@ -313,7 +298,6 @@ static void CG_Obituary( entityState_t *ent ) {
 		case MOD_JUICED:
 			message = "was juiced by";
 			break;
-#endif
 		case MOD_TELEFRAG:
 			message = "tried to invade";
 			message2 = "'s personal space";
@@ -388,7 +372,6 @@ static void CG_UseItem( centity_t *cent ) {
 		trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.medkitSound );
 		break;
 
-#ifdef MISSIONPACK
 	case HI_KAMIKAZE:
 		break;
 
@@ -397,7 +380,6 @@ static void CG_UseItem( centity_t *cent ) {
 	case HI_INVULNERABILITY:
 		trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.useInvulnerabilitySound );
 		break;
-#endif
 	}
 }
 
@@ -712,31 +694,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		trap_S_StartSound (NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*taunt.wav" ) );
 		break;
 
-#ifdef MISSIONPACK
-	case EV_TAUNT_YES:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_YES);
-		break;
-
-	case EV_TAUNT_NO:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_NO);
-		break;
-
-	case EV_TAUNT_FOLLOWME:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_FOLLOWME);
-		break;
-
-	case EV_TAUNT_GETFLAG:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONGETFLAG);
-		break;
-
-	case EV_TAUNT_GUARDBASE:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONDEFENSE);
-		break;
-
-	case EV_TAUNT_PATROL:
-		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONPATROL);
-		break;
-#endif
 	case EV_WATER_TOUCH:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.watrInSound );
 		break;
@@ -780,8 +737,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			// will be played at prediction time
 			if ( item->giType == IT_POWERUP || item->giType == IT_TEAM) {
 				trap_S_StartSound (NULL, es->number, CHAN_AUTO,	cgs.media.n_healthSound );
-			} else if (item->giType == IT_PERSISTANT_POWERUP) {
-#ifdef MISSIONPACK
+			} else if (item->giType == IT_RUNE) {
 				switch (item->giTag ) {
 					case PW_SCOUT:
 						trap_S_StartSound (NULL, es->number, CHAN_AUTO,	cgs.media.scoutSound );
@@ -796,7 +752,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 						trap_S_StartSound (NULL, es->number, CHAN_AUTO,	cgs.media.ammoregenSound );
 					break;
 				}
-#endif
 			} else {
 				trap_S_StartSound (NULL, es->number, CHAN_AUTO,	trap_S_RegisterSound( item->pickup_sound, qfalse ) );
 			}
@@ -919,7 +874,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		}
 		break;
 
-#ifdef MISSIONPACK
 	case EV_PROXIMITY_MINE_STICK:
 		if( es->eventParm & SURF_FLESH ) {
 			trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.wstbimplSound );
@@ -957,7 +911,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	case EV_LIGHTNINGBOLT:
 		CG_LightningBoltBeam(es->origin2, es->pos.trBase);
 		break;
-#endif
 
 	case EV_SCOREPLUM:
 		CG_ScorePlum( cent->currentState.otherEntityNum, cent->lerpOrigin, cent->currentState.time );
@@ -1075,20 +1028,16 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 					}
 					else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-#ifdef MISSIONPACK
-							if (cgs.gametype == GT_1FCTF) 
+							if (cgs.gametype == GT_ONEFLAG) 
 								CG_AddBufferedSound( cgs.media.yourTeamTookTheFlagSound );
 							else
-#endif
-						 	CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
+						 		CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
 						}
 						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-#ifdef MISSIONPACK
-							if (cgs.gametype == GT_1FCTF)
+							if (cgs.gametype == GT_ONEFLAG)
 								CG_AddBufferedSound( cgs.media.enemyTookTheFlagSound );
 							else
-#endif
- 							CG_AddBufferedSound( cgs.media.yourTeamTookEnemyFlagSound );
+ 								CG_AddBufferedSound( cgs.media.yourTeamTookEnemyFlagSound );
 						}
 					}
 					break;
@@ -1098,24 +1047,19 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 					}
 					else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-#ifdef MISSIONPACK
-							if (cgs.gametype == GT_1FCTF)
+							if (cgs.gametype == GT_ONEFLAG)
 								CG_AddBufferedSound( cgs.media.yourTeamTookTheFlagSound );
 							else
-#endif
-							CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
+								CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
 						}
 						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-#ifdef MISSIONPACK
-							if (cgs.gametype == GT_1FCTF)
+							if (cgs.gametype == GT_ONEFLAG)
 								CG_AddBufferedSound( cgs.media.enemyTookTheFlagSound );
 							else
-#endif
-							CG_AddBufferedSound( cgs.media.yourTeamTookEnemyFlagSound );
+								CG_AddBufferedSound( cgs.media.yourTeamTookEnemyFlagSound );
 						}
 					}
 					break;
-#ifdef MISSIONPACK
 				case GTS_REDOBELISK_ATTACKED: // Overload: red obelisk is being attacked
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound( cgs.media.yourBaseIsUnderAttackSound );
@@ -1126,7 +1070,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 						CG_AddBufferedSound( cgs.media.yourBaseIsUnderAttackSound );
 					}
 					break;
-#endif
 
 				case GTS_REDTEAM_SCORED:
 					CG_AddBufferedSound(cgs.media.redScoredSound);
@@ -1143,11 +1086,9 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 				case GTS_TEAMS_ARE_TIED:
 					CG_AddBufferedSound( cgs.media.teamsTiedSound );
 					break;
-#ifdef MISSIONPACK
 				case GTS_KAMIKAZE:
 					trap_S_StartLocalSound(cgs.media.kamikazeFarSound, CHAN_ANNOUNCER);
 					break;
-#endif
 				default:
 					break;
 			}
@@ -1208,13 +1149,10 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		// don't play gib sound when using the kamikaze because it interferes
 		// with the kamikaze sound, downside is that the gib sound will also
 		// not be played when someone is gibbed while just carrying the kamikaze
-#ifdef MISSIONPACK
 		if ( !(es->eFlags & EF_KAMIKAZE) ) {
 			trap_S_StartSound( NULL, es->number, CHAN_BODY, cgs.media.gibSound );
 		}
-#else
 		trap_S_StartSound( NULL, es->number, CHAN_BODY, cgs.media.gibSound );
-#endif
 		CG_GibPlayer( cent->lerpOrigin );
 		break;
 
@@ -1225,10 +1163,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 
 	case EV_DEBUG_LINE:
 		CG_Beam( cent );
-		break;
-
-	case EV_PROXIMITY_MINE_STICK:
-	case EV_PROXIMITY_MINE_TRIGGER:
 		break;
 
 	default:

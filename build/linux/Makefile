@@ -95,6 +95,8 @@ endif
 BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
 BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
 
+CMDIR=$(MOUNT_DIR)/qcommon
+BGDIR=$(MOUNT_DIR)/bgame
 QADIR=$(MOUNT_DIR)/game
 CGDIR=$(MOUNT_DIR)/cgame
 UIDIR=$(MOUNT_DIR)/q3_ui
@@ -331,6 +333,7 @@ makedirs:
 
 CGOBJ_ = \
   $(B)/$(MOD)/cgame/cg_main.o \
+  $(B)/$(MOD)/cgame/bg_gametypes.o \
   $(B)/$(MOD)/cgame/bg_lib.o \
   $(B)/$(MOD)/cgame/bg_misc.o \
   $(B)/$(MOD)/cgame/bg_pmove.o \
@@ -353,8 +356,8 @@ CGOBJ_ = \
   $(B)/$(MOD)/cgame/cg_view.o \
   $(B)/$(MOD)/cgame/cg_weapons.o \
   \
-  $(B)/$(MOD)/game/q_math.o \
-  $(B)/$(MOD)/game/q_shared.o
+  $(B)/$(MOD)/qcommon/q_math.o \
+  $(B)/$(MOD)/qcommon/q_shared.o
 
 CGOBJ = $(CGOBJ_) $(B)/$(MOD)/cgame/cg_syscalls.o
 
@@ -401,8 +404,8 @@ QAOBJ_ = \
   $(B)/$(MOD)/game/g_unlagged.o \
   $(B)/$(MOD)/game/g_weapon.o \
   \
-  $(B)/$(MOD)/game/q_math.o \
-  $(B)/$(MOD)/game/q_shared.o
+  $(B)/$(MOD)/qcommon/q_math.o \
+  $(B)/$(MOD)/qcommon/q_shared.o
 
 QAOBJ = $(QAOBJ_) $(B)/$(MOD)/game/g_syscalls.o
 
@@ -457,8 +460,8 @@ UIOBJ_ = \
   $(B)/$(MOD)/ui/ui_teamorders.o \
   $(B)/$(MOD)/ui/ui_video.o \
   \
-  $(B)/$(MOD)/game/q_math.o \
-  $(B)/$(MOD)/game/q_shared.o
+  $(B)/$(MOD)/qcommon/q_math.o \
+  $(B)/$(MOD)/qcommon/q_shared.o
 
 UIOBJ = $(UIOBJ_) $(B)/$(MOD)/ui/ui_syscalls.o
 
@@ -470,19 +473,25 @@ $(B)/$(MOD)/ui$(SHLIBNAME): $(UIOBJ)
 ## GAME MODULE RULES
 #############################################################################
 
-$(B)/$(MOD)/cgame/bg_%.o: $(QADIR)/bg_%.c
+$(B)/$(MOD)/cgame/bg_%.o: $(BGDIR)/bg_%.c
 	$(DO_CGAME_CC)
 
-$(B)/$(MOD)/cgame/q_%.o: $(QADIR)/q_%.c
+$(B)/$(MOD)/cgame/q_%.o: $(CMDIR)/q_%.c
 	$(DO_CGAME_CC)
 
 $(B)/$(MOD)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
 
+$(B)/$(MOD)/game/bg_%.o: $(BGDIR)/bg_%.c
+	$(DO_GAME_CC)
+
+$(B)/$(MOD)/game/q_%.o: $(CMDIR)/q_%.c
+	$(DO_GAME_CC)
+
 $(B)/$(MOD)/game/%.o: $(QADIR)/%.c
 	$(DO_GAME_CC)
 
-$(B)/$(MOD)/ui/bg_%.o: $(QADIR)/bg_%.c
+$(B)/$(MOD)/ui/bg_%.o: $(BGDIR)/bg_%.c
 	$(DO_UI_CC)
 
 $(B)/$(MOD)/ui/%.o: $(UIDIR)/%.c
